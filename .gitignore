@@ -6,3 +6,16 @@ build/
 coverage/
 backups/
 uploads/
+
+# Next.js
+apps/web/.next/
+apps/web/tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+playwright-report/
+test-results/
