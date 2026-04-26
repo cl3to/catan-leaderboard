@@ -99,7 +99,7 @@ export function Navbar() {
     }
 
     return (
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-catan-brick to-catan-wood text-sm font-bold text-white shadow-md">
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#8B4513] to-[#3d2e22] text-sm font-bold text-white shadow-md">
         {nickname.charAt(0).toUpperCase()}
       </div>
     );
@@ -108,16 +108,16 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-40 px-3 py-3 sm:px-4">
       <div className="catan-shell">
-        <div className="catan-panel overflow-hidden border-[1.5px] bg-card/95">
+        <div className="catan-panel overflow-hidden border-[1.5px] bg-[#f4f1e1]/95">
           <div className="flex items-center justify-between gap-3 px-3 py-3 sm:px-5">
             <Link href="/" className="group flex items-center gap-3">
               <span className="hex-badge text-[11px] tracking-widest">LSC</span>
               <div>
-                <p className="font-display text-base leading-none text-catan-wood sm:text-lg">
+                <p className="font-display text-base leading-none text-[#3d2e22] sm:text-lg">
                   Liga Socialista do Catan
                 </p>
-                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                  ranking da mesa revolucionaria
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#7a6a5a]">
+                  ranking da mesa revolucionária
                 </p>
               </div>
             </Link>
@@ -132,7 +132,7 @@ export function Navbar() {
                       {renderAvatar()}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-60 border-border/70 bg-card" align="end" forceMount>
+                  <DropdownMenuContent className="w-60 border-[#c9b896]/70 bg-[#f4f1e1]" align="end" forceMount>
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
                         <p className="font-semibold">{profile?.nickname || session.user.nickname}</p>
@@ -173,8 +173,8 @@ export function Navbar() {
               className={cn(
                 'rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
                 pathname === '/'
-                  ? 'border-catan-brick/70 bg-catan-brick text-white'
-                  : 'border-border bg-secondary/80 text-secondary-foreground hover:bg-secondary'
+                  ? 'border-[#8B4513]/70 bg-[#8B4513] text-white'
+                  : 'border-[#c9b896] bg-[#e8e3d6] text-[#3d2e22] hover:bg-[#dfd9cc]'
               )}
             >
               Leaderboard
@@ -184,8 +184,8 @@ export function Navbar() {
               className={cn(
                 'inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
                 pathname === '/calendar'
-                  ? 'border-catan-ocean/70 bg-catan-ocean text-white'
-                  : 'border-border bg-secondary/80 text-secondary-foreground hover:bg-secondary'
+                  ? 'border-[#4682B4]/70 bg-[#4682B4] text-white'
+                  : 'border-[#c9b896] bg-[#e8e3d6] text-[#3d2e22] hover:bg-[#dfd9cc]'
               )}
             >
               <Calendar className="h-3.5 w-3.5" /> Calendario
@@ -197,8 +197,8 @@ export function Navbar() {
                   className={cn(
                     'inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
                     pathname === '/submit'
-                      ? 'border-catan-wheat/70 bg-catan-wheat text-catan-ore'
-                      : 'border-border bg-secondary/80 text-secondary-foreground hover:bg-secondary'
+                      ? 'border-[#FFD700]/70 bg-[#FFD700] text-[#3d2e22]'
+                      : 'border-[#c9b896] bg-[#e8e3d6] text-[#3d2e22] hover:bg-[#dfd9cc]'
                   )}
                 >
                   <Swords className="h-3.5 w-3.5" /> Enviar partida
@@ -209,8 +209,8 @@ export function Navbar() {
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
                       pathname?.startsWith('/admin')
-                        ? 'border-catan-sheep/70 bg-catan-sheep text-white'
-                        : 'border-catan-sheep/50 bg-catan-sheep/15 text-catan-sheep hover:bg-catan-sheep/20'
+                        ? 'border-[#556B2F]/70 bg-[#556B2F] text-white'
+                        : 'border-[#556B2F]/50 bg-[#556B2F]/15 text-[#556B2F] hover:bg-[#556B2F]/20'
                     )}
                   >
                     Admin
