@@ -11,7 +11,11 @@ async function bootstrap() {
   app.use(helmet());
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+      'http://web:3000',
+      'http://catan-web:3000',
+    ],
     credentials: true,
   });
 

@@ -74,7 +74,7 @@ type CreateMatchValues = z.infer<typeof createMatchSchema>;
 const statusStyles: Record<string, { label: string; classes: string }> = {
   open: {
     label: 'Aberta',
-    classes: 'border-catan-sheep/50 bg-catan-sheep/20 text-catan-sheep',
+    classes: 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400',
   },
   cancelled: {
     label: 'Cancelada',
@@ -82,7 +82,7 @@ const statusStyles: Record<string, { label: string; classes: string }> = {
   },
   complete: {
     label: 'Completa',
-    classes: 'border-catan-ocean/45 bg-catan-ocean/15 text-catan-ocean',
+    classes: 'border-blue-500/30 bg-blue-500/15 text-blue-400',
   },
 };
 
@@ -255,25 +255,21 @@ export default function CalendarPage() {
     }
   };
 
-  const isParticipant = selectedMatch?.players.some(
-    (p) => p.userId === currentUserId
-  );
+  const isParticipant = selectedMatch?.players.some((p) => p.userId === currentUserId);
   const isCreator = selectedMatch?.creator.userId === currentUserId;
-
   const isLoggedIn = sessionStatus === 'authenticated';
 
   return (
     <main className="catan-app">
       <div className="catan-shell space-y-5 pb-10 pt-3 sm:space-y-6 sm:pt-4">
-        <section className="catan-hero animate-rise">
+        <section className="catan-hero animate-slide-up">
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="catan-label bg-white/15 text-white">Agenda da Liga</span>
-            <h1 className="font-display text-3xl leading-tight sm:text-4xl">
-              Calendario da Revolucao de Catan
+            <span className="catan-label">Agenda da Liga</span>
+            <h1 className="font-display text-3xl leading-tight sm:text-4xl text-foreground">
+              Calendário da Revolução de Catan
             </h1>
-            <p className="text-sm text-white/90 sm:text-base">
-              Organize as mesas da Liga Socialista do Catan, convide colonos e acompanhe quais
-              frentes ja estao em disputa.
+            <p className="text-sm text-muted-foreground sm:text-base">
+              Organize as mesas da Liga Socialista do Catan, convide colonos e acompanhe quais frentes já estão em disputa.
             </p>
           </div>
         </section>
@@ -287,9 +283,9 @@ export default function CalendarPage() {
                   Agendar nova partida
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="bg-surface-elevated border-border">
                 <DialogHeader>
-                  <DialogTitle>Agendar Partida</DialogTitle>
+                  <DialogTitle className="text-foreground">Agendar Partida</DialogTitle>
                   <DialogDescription>
                     Crie uma nova partida agendada.
                   </DialogDescription>
@@ -304,11 +300,14 @@ export default function CalendarPage() {
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Titulo (opcional)</FormLabel>
+                          <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                            Título (opcional)
+                          </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Ex: Catan de sabado"
+                              placeholder="Ex: Catan de sábado"
                               {...field}
+                              className="bg-surface-base border-border"
                             />
                           </FormControl>
                           <FormMessage />
@@ -320,9 +319,11 @@ export default function CalendarPage() {
                       name="scheduledDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Data e Horario</FormLabel>
+                          <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                            Data e Horário
+                          </FormLabel>
                           <FormControl>
-                            <Input type="datetime-local" {...field} />
+                            <Input type="datetime-local" {...field} className="bg-surface-base border-border" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -334,17 +335,19 @@ export default function CalendarPage() {
                         name="minPlayers"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Minimo de jogadores</FormLabel>
+                            <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                              Mínimo de jogadores
+                            </FormLabel>
                             <Select
                               onValueChange={(v) => field.onChange(parseInt(v))}
                               defaultValue={field.value.toString()}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="bg-surface-base border-border">
                                   <SelectValue />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="bg-surface-overlay border-border">
                                 {[2, 3, 4].map((n) => (
                                   <SelectItem key={n} value={n.toString()}>
                                     {n}
@@ -361,17 +364,19 @@ export default function CalendarPage() {
                         name="maxPlayers"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Maximo de jogadores</FormLabel>
+                            <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                              Máximo de jogadores
+                            </FormLabel>
                             <Select
                               onValueChange={(v) => field.onChange(parseInt(v))}
                               defaultValue={field.value.toString()}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="bg-surface-base border-border">
                                   <SelectValue />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="bg-surface-overlay border-border">
                                 {[2, 3, 4, 5, 6].map((n) => (
                                   <SelectItem key={n} value={n.toString()}>
                                     {n}
@@ -385,10 +390,7 @@ export default function CalendarPage() {
                       />
                     </div>
                     <DialogFooter>
-                      <Button
-                        type="submit"
-                        disabled={createMutation.isPending}
-                      >
+                      <Button type="submit" disabled={createMutation.isPending}>
                         {createMutation.isPending ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
@@ -404,18 +406,18 @@ export default function CalendarPage() {
         </div>
 
         {isLoading ? (
-          <Card className="catan-panel border-[1.5px]">
+          <Card className="catan-panel border-border">
             <CardContent className="space-y-3 p-4 sm:p-5">
               {[0, 1, 2].map((item) => (
-                <div key={item} className="h-36 animate-pulse rounded-2xl bg-secondary/70" />
+                <div key={item} className="h-36 animate-pulse rounded-2xl bg-surface-base" />
               ))}
             </CardContent>
           </Card>
         ) : !isLoggedIn ? (
-          <Card className="catan-panel border-[1.5px]">
+          <Card className="catan-panel border-border">
             <CardContent className="p-10 text-center">
               <CalendarIcon className="mx-auto mb-3 h-12 w-12 text-muted-foreground" />
-              <h3 className="font-display text-2xl text-catan-wood">
+              <h3 className="font-display text-2xl text-foreground">
                 Faça login para participar
               </h3>
               <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
@@ -424,10 +426,10 @@ export default function CalendarPage() {
             </CardContent>
           </Card>
         ) : matches?.length === 0 ? (
-          <Card className="catan-panel border-[1.5px]">
+          <Card className="catan-panel border-border">
             <CardContent className="p-10 text-center">
               <CalendarIcon className="mx-auto mb-3 h-12 w-12 text-muted-foreground" />
-              <h3 className="font-display text-2xl text-catan-wood">
+              <h3 className="font-display text-2xl text-foreground">
                 Nenhuma frente agendada
               </h3>
               <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
@@ -436,7 +438,8 @@ export default function CalendarPage() {
               <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
                 <DialogTrigger asChild>
                   <Button className="mt-5 rounded-full px-5">
-                    <Plus className="mr-1.5 h-4 w-4" /> Criar primeira partida
+                    <Plus className="mr-1.5 h-4 w-4" />
+                    Criar primeira partida
                   </Button>
                 </DialogTrigger>
               </Dialog>
@@ -449,12 +452,12 @@ export default function CalendarPage() {
               return (
                 <Card
                   key={match.id}
-                  className="catan-panel animate-rise overflow-hidden border-[1.5px]"
+                  className="catan-panel animate-slide-up overflow-hidden border-border"
                   style={{ animationDelay: `${Math.min(index * 70, 280)}ms` }}
                 >
-                  <CardHeader className="space-y-3 bg-gradient-to-r from-catan-wood/8 via-catan-brick/8 to-catan-ocean/8 p-4 pb-3">
+                  <CardHeader className="space-y-3 bg-surface-base/50 p-4 pb-3">
                     <div className="flex items-start justify-between gap-3">
-                      <CardTitle className="font-display text-xl text-catan-wood">
+                      <CardTitle className="font-display text-xl text-foreground">
                         {match.title || 'Partida da Liga'}
                       </CardTitle>
                       <span
@@ -470,7 +473,7 @@ export default function CalendarPage() {
                     <div className="space-y-1.5 text-sm text-muted-foreground">
                       <p className="inline-flex items-center gap-1.5">
                         <Clock className="h-4 w-4" />
-                        {format(new Date(match.scheduledDate), "dd 'de' MMMM 'as' HH:mm", {
+                        {format(new Date(match.scheduledDate), "dd 'de' MMMM 'às' HH:mm", {
                           locale: ptBR,
                         })}
                       </p>
@@ -485,13 +488,13 @@ export default function CalendarPage() {
                   </CardHeader>
 
                   <CardContent className="space-y-4 p-4">
-                    <div className="rounded-2xl bg-secondary/65 p-3">
-                      <p className="inline-flex items-center gap-2 text-sm font-semibold text-secondary-foreground">
-                        <Users className="h-4 w-4 text-catan-ocean" />
+                    <div className="rounded-xl bg-surface-base/70 p-3">
+                      <p className="inline-flex items-center gap-2 text-sm font-semibold text-foreground">
+                        <Users className="h-4 w-4 text-gold" />
                         {match.currentPlayers} / {match.maxPlayers} jogadores
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Minimo para iniciar: {match.minPlayers}
+                        Mínimo para iniciar: {match.minPlayers}
                       </p>
                     </div>
 
@@ -504,13 +507,13 @@ export default function CalendarPage() {
                           {match.players.slice(0, 6).map((player) => (
                             <span
                               key={player.userId}
-                              className="inline-flex items-center rounded-full border border-border/70 bg-background px-2.5 py-1 text-xs font-medium text-foreground"
+                              className="inline-flex items-center rounded-full border border-border bg-surface-elevated px-2.5 py-1 text-xs font-medium text-foreground"
                             >
                               {player.nickname}
                             </span>
                           ))}
                           {match.players.length > 6 && (
-                            <span className="inline-flex items-center rounded-full border border-border/70 bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                            <span className="inline-flex items-center rounded-full border border-border bg-surface-elevated px-2.5 py-1 text-xs font-medium text-muted-foreground">
                               +{match.players.length - 6}
                             </span>
                           )}
@@ -522,7 +525,7 @@ export default function CalendarPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-9 flex-1 rounded-xl"
+                        className="h-9 flex-1 rounded-xl border-border"
                         onClick={() => handleViewDetails(match)}
                       >
                         Ver detalhes
@@ -557,30 +560,30 @@ export default function CalendarPage() {
             if (!open) setSelectedMatch(null);
           }}
         >
-          <DialogContent className="max-w-lg">
+          <DialogContent className="max-w-lg bg-surface-elevated border-border">
             {selectedMatch && (
               <>
                 <DialogHeader>
-                  <DialogTitle className="text-catan-wood">
+                  <DialogTitle className="text-foreground">
                     {selectedMatch.title || 'Partida da Liga'}
                   </DialogTitle>
-                  <DialogDescription>
+                  <DialogDescription className="text-muted-foreground">
                     {format(
                       new Date(selectedMatch.scheduledDate),
-                      "dd 'de' MMMM 'as' HH:mm",
+                      "dd 'de' MMMM 'às' HH:mm",
                       { locale: ptBR }
                     )}{' '}
                     - Coordenador: {selectedMatch.creator.nickname}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <div className="rounded-lg bg-secondary/65 p-4">
-                    <p className="text-sm font-semibold">
+                  <div className="rounded-lg bg-surface-base/70 p-4">
+                    <p className="text-sm font-semibold text-foreground">
                       {selectedMatch.currentPlayers} / {selectedMatch.maxPlayers}{' '}
                       jogadores
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Minimo: {selectedMatch.minPlayers}
+                      Mínimo: {selectedMatch.minPlayers}
                     </p>
                     <p className="text-xs text-muted-foreground capitalize">
                       Status: {statusStyles[selectedMatch.status]?.label}
@@ -599,8 +602,8 @@ export default function CalendarPage() {
                             className={cn(
                               'inline-flex items-center rounded-full border px-3 py-1 text-sm',
                               player.userId === currentUserId
-                                ? 'border-catan-sheep bg-catan-sheep/20'
-                                : 'border-border bg-background'
+                                ? 'border-gold/30 bg-gold/10 text-gold'
+                                : 'border-border bg-surface-base text-foreground'
                             )}
                           >
                             {player.nickname}
@@ -640,7 +643,8 @@ export default function CalendarPage() {
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
                           <>
-                            <LogOut className="mr-2 h-4 w-4" /> Sair
+                            <LogOut className="mr-2 h-4 w-4" />
+                            Sair
                           </>
                         )}
                       </Button>
@@ -656,7 +660,8 @@ export default function CalendarPage() {
                           <Loader2 className="h-4 w-4 animate-spin" />
                         ) : (
                           <>
-                            <X className="mr-2 h-4 w-4" /> Cancelar
+                            <X className="mr-2 h-4 w-4" />
+                            Cancelar
                           </>
                         )}
                       </Button>

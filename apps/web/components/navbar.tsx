@@ -5,32 +5,15 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { User, LogOut, Trophy, Calendar, Swords } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { User, LogOut, Calendar, Scroll, Hexagon } from 'lucide-react';
 
-const avatarPresets: Record<string, { icon: string; color: string }> = {
-  wood: { icon: '🪵', color: '#8B4513' },
-  brick: { icon: '🧱', color: '#B22222' },
-  sheep: { icon: '🐑', color: '#90EE90' },
-  wheat: { icon: '🌾', color: '#FFD700' },
-  ore: { icon: '🪨', color: '#696969' },
-  desert: { icon: '🏜️', color: '#F4A460' },
-  settlement: { icon: '🏠', color: '#4A90D9' },
-  city: { icon: '🏰', color: '#9B59B6' },
-  road: { icon: '🛤️', color: '#8B4513' },
-  robber: { icon: '🏴', color: '#2C3E50' },
-  dice: { icon: '🎲', color: '#E74C3C' },
-  port: { icon: '⚓', color: '#3498DB' },
-  knight: { icon: '🛡️', color: '#95A5A6' },
-  vp: { icon: '⭐', color: '#F1C40F' },
-  trade: { icon: '⚖️', color: '#1ABC9C' },
+const avatarPresets: Record<string, { icon: string }> = {
+  wood: { icon: '🪵' }, brick: { icon: '🧱' }, sheep: { icon: '🐑' },
+  wheat: { icon: '🌾' }, ore: { icon: '🪨' }, desert: { icon: '🏜️' },
+  settlement: { icon: '🏠' }, city: { icon: '🏰' }, road: { icon: '🛤️' },
+  robber: { icon: '🏴' }, dice: { icon: '🎲' }, port: { icon: '⚓' },
+  knight: { icon: '🛡️' }, vp: { icon: '⭐' }, trade: { icon: '⚖️' },
 };
 
 interface NavbarProfile {
@@ -46,22 +29,14 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const getAuthHeaders = (): HeadersInit => {
-    const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (session?.accessToken) {
-      headers['Authorization'] = `Bearer ${session.accessToken}`;
-    }
-    return headers;
-  };
-
   const { data: profile } = useQuery<NavbarProfile>({
     queryKey: ['navbar-profile'],
     queryFn: async () => {
-      const res = await fetch('/api/v1/users/me', { headers: getAuthHeaders() });
+      const res = await fetch('/api/v1/users/me');
       if (!res.ok) return null;
       return res.json();
     },
-    enabled: status === 'authenticated' && !!session?.accessToken,
+    enabled: status === 'authenticated',
   });
 
   const handleLogout = async () => {
@@ -71,152 +46,119 @@ export function Navbar() {
   };
 
   const renderAvatar = () => {
-    const avatarMode = profile?.avatarMode;
-    const avatarKey = profile?.avatarKey;
-    const avatarUrl = profile?.avatarUrl;
-    const nickname = session?.user?.nickname || profile?.nickname || '?';
-
-    if (avatarUrl) {
-      return (
-        <img
-          src={avatarUrl}
-          alt="Avatar"
-          className="h-9 w-9 rounded-full object-cover"
-        />
-      );
+    if (profile?.avatarUrl) {
+      return <img src={profile.avatarUrl} alt="" className="w-8 h-8 rounded-lg object-cover border border-gold/30" />;
     }
-
-    if (avatarMode === 'preset' && avatarKey && avatarPresets[avatarKey]) {
-      const preset = avatarPresets[avatarKey];
+    if (profile?.avatarMode === 'preset' && profile.avatarKey && avatarPresets[profile.avatarKey]) {
       return (
-        <div
-          className="flex h-9 w-9 items-center justify-center rounded-full text-lg"
-          style={{ background: preset.color + '30' }}
-        >
-          {preset.icon}
+        <div className="w-8 h-8 rounded-lg bg-surface-elevated flex items-center justify-center border border-gold/20">
+          {avatarPresets[profile.avatarKey].icon}
         </div>
       );
     }
-
+    const initial = session?.user?.nickname?.[0] || profile?.nickname?.[0] || '?';
     return (
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#8B4513] to-[#3d2e22] text-sm font-bold text-white shadow-md">
-        {nickname.charAt(0).toUpperCase()}
+      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-background text-xs font-bold border border-gold-light/30">
+        {initial.toUpperCase()}
       </div>
     );
   };
 
   return (
-    <nav className="sticky top-0 z-40 px-3 py-3 sm:px-4">
-      <div className="catan-shell">
-        <div className="catan-panel overflow-hidden border-[1.5px] bg-[#f4f1e1]/95">
-          <div className="flex items-center justify-between gap-3 px-3 py-3 sm:px-5">
-            <Link href="/" className="group flex items-center gap-3">
-              <span className="hex-badge text-[11px] tracking-widest">LSC</span>
-              <div>
-                <p className="font-display text-base leading-none text-[#3d2e22] sm:text-lg">
-                  Liga Socialista do Catan
-                </p>
-                <p className="text-[11px] uppercase tracking-[0.16em] text-[#7a6a5a]">
-                  ranking da mesa revolucionária
-                </p>
-              </div>
-            </Link>
-
-            <div className="flex items-center gap-2">
-              {status === 'loading' ? (
-                <div className="h-9 w-9 animate-pulse rounded-full bg-muted" />
-              ) : session?.user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-border p-0">
-                      {renderAvatar()}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-60 border-[#c9b896]/70 bg-[#f4f1e1]" align="end" forceMount>
-                    <div className="flex items-center justify-start gap-2 p-2">
-                      <div className="flex flex-col space-y-1 leading-none">
-                        <p className="font-semibold">{profile?.nickname || session.user.nickname}</p>
-                        <p className="w-[210px] truncate text-sm text-muted-foreground">{profile?.email || session.user.email}</p>
-                      </div>
-                    </div>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile" className="flex cursor-pointer items-center gap-2">
-                        <User className="h-4 w-4" />
-                        Perfil
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile" className="flex cursor-pointer items-center gap-2">
-                        <Trophy className="h-4 w-4" />
-                        Minhas estatisticas
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer text-destructive" onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sair
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button asChild size="sm" className="rounded-full px-4">
-                  <Link href="/login">Entrar</Link>
-                </Button>
-              )}
+    <nav className="sticky top-0 z-50 bg-surface-base/95 backdrop-blur-md border-b border-border">
+      <div className="max-w-[1200px] mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-gold to-gold-dark rounded-xl flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform duration-200">
+              <Hexagon className="w-5 h-5 text-background" />
             </div>
-          </div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-display text-lg font-semibold text-foreground">LSC</span>
+              <span className="text-muted-foreground">·</span>
+              <span className="text-sm text-muted-foreground">Catan</span>
+            </div>
+          </Link>
 
-          <div className="flex items-center gap-2 overflow-x-auto border-t border-border/80 px-3 py-2 sm:px-5">
-            <Link
-              href="/"
-              className={cn(
-                'rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
-                pathname === '/'
-                  ? 'border-[#8B4513]/70 bg-[#8B4513] text-white'
-                  : 'border-[#c9b896] bg-[#e8e3d6] text-[#3d2e22] hover:bg-[#dfd9cc]'
-              )}
-            >
-              Leaderboard
-            </Link>
+          <div className="hidden sm:flex items-center gap-1">
             <Link
               href="/calendar"
-              className={cn(
-                'inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                 pathname === '/calendar'
-                  ? 'border-[#4682B4]/70 bg-[#4682B4] text-white'
-                  : 'border-[#c9b896] bg-[#e8e3d6] text-[#3d2e22] hover:bg-[#dfd9cc]'
-              )}
+                  ? 'bg-gold/15 text-gold'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-surface-elevated'
+              }`}
             >
-              <Calendar className="h-3.5 w-3.5" /> Calendario
+              <Calendar className="w-4 h-4 inline mr-1.5" />
+              Calendário
             </Link>
-            {status === 'authenticated' && session?.user && (
+            {status === 'authenticated' && (
               <>
                 <Link
                   href="/submit"
-                  className={cn(
-                    'inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                     pathname === '/submit'
-                      ? 'border-[#FFD700]/70 bg-[#FFD700] text-[#3d2e22]'
-                      : 'border-[#c9b896] bg-[#e8e3d6] text-[#3d2e22] hover:bg-[#dfd9cc]'
-                  )}
+                      ? 'bg-gold/15 text-gold'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-surface-elevated'
+                  }`}
                 >
-                  <Swords className="h-3.5 w-3.5" /> Enviar partida
+                  <Scroll className="w-4 h-4 inline mr-1.5" />
+                  Partida
                 </Link>
-                {session.user.role === 'admin' && (
+                {session.user?.role === 'admin' && (
                   <Link
                     href="/admin"
-                    className={cn(
-                      'rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] transition-colors',
-                      pathname?.startsWith('/admin')
-                        ? 'border-[#556B2F]/70 bg-[#556B2F] text-white'
-                        : 'border-[#556B2F]/50 bg-[#556B2F]/15 text-[#556B2F] hover:bg-[#556B2F]/20'
-                    )}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      pathname === '/admin'
+                        ? 'bg-gold/15 text-gold'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-surface-elevated'
+                    }`}
                   >
                     Admin
                   </Link>
                 )}
               </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3">
+            {status === 'loading' ? (
+              <div className="w-9 h-9 bg-surface-elevated rounded-lg animate-pulse" />
+            ) : session?.user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-10 p-1 rounded-xl hover:bg-surface-elevated">
+                    {renderAvatar()}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-surface-elevated border-border p-1">
+                  <div className="px-3 py-2.5 border-b border-border">
+                    <p className="font-medium text-foreground">{profile?.nickname || session.user.nickname}</p>
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">{profile?.email || session.user.email}</p>
+                  </div>
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem asChild className="text-muted-foreground hover:text-foreground hover:bg-surface-overlay cursor-pointer rounded-lg mx-1 my-1">
+                    <Link href="/profile" className="flex items-center gap-2.5 px-3 py-2">
+                      <User className="w-4 h-4" />
+                      Perfil
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem
+                    className="text-red-400 hover:text-red-300 hover:bg-red-950/30 cursor-pointer rounded-lg mx-1 my-1"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                asChild
+                className="bg-gradient-to-r from-gold to-gold-dark text-background font-semibold hover:from-gold-light hover:to-gold shadow-glow"
+              >
+                <Link href="/login">Entrar</Link>
+              </Button>
             )}
           </div>
         </div>

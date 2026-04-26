@@ -4,8 +4,9 @@ import * as React from 'react';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Trophy, Users, Calendar } from 'lucide-react';
+import { Loader2, ArrowLeft, Trophy, Users } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface MatchPlayer {
   id: string;
@@ -67,7 +68,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
     return (
       <main className="catan-app">
         <div className="catan-shell py-10 text-center">
-          <Loader2 className="animate-spin h-8 w-8 mx-auto text-muted-foreground" />
+          <Loader2 className="animate-spin h-8 w-8 mx-auto text-gold" />
         </div>
       </main>
     );
@@ -85,25 +86,25 @@ export default function MatchDetailsPage({ params }: PageProps) {
     <main className="catan-app">
       <div className="catan-shell space-y-6 py-6">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-foreground">
             <Link href="/">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <section className="catan-hero animate-rise flex-1">
+          <section className="catan-hero animate-slide-up flex-1">
             <div className="relative z-10 space-y-3">
-              <span className="catan-label bg-white/15 text-white">Detalhes</span>
-              <h1 className="font-display text-3xl leading-tight sm:text-4xl">
+              <span className="catan-label">Detalhes</span>
+              <h1 className="font-display text-3xl leading-tight sm:text-4xl text-foreground">
                 Partida
               </h1>
             </div>
           </section>
         </div>
 
-        <Card className="catan-panel border-[1.5px]">
+        <Card className="catan-panel border-border">
           <CardHeader className="space-y-4">
-            <CardTitle className="flex items-center gap-2 text-catan-wood">
-              <Trophy className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <Trophy className="h-5 w-5 text-gold" />
               Resumo
             </CardTitle>
             <CardDescription />
@@ -112,7 +113,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-muted-foreground">Data</p>
-                <p className="font-medium">
+                <p className="font-medium text-foreground">
                   {new Date(match.matchDate).toLocaleDateString('pt-BR', {
                     dateStyle: 'full',
                   })}
@@ -120,15 +121,15 @@ export default function MatchDetailsPage({ params }: PageProps) {
               </div>
               <div>
                 <p className="text-muted-foreground">Status</p>
-                <p className="font-medium capitalize">{match.status}</p>
+                <p className="font-medium text-foreground capitalize">{match.status}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Enviada por</p>
-                <p className="font-medium">{match.submittedBy?.nickname || '-'}</p>
+                <p className="font-medium text-foreground">{match.submittedBy?.nickname || '-'}</p>
               </div>
               <div>
                 <p className="text-muted-foreground">Criada em</p>
-                <p className="font-medium">
+                <p className="font-medium text-foreground">
                   {new Date(match.createdAt).toLocaleDateString('pt-BR')}
                 </p>
               </div>
@@ -137,16 +138,16 @@ export default function MatchDetailsPage({ params }: PageProps) {
             {match.notes && (
               <div>
                 <p className="text-muted-foreground">Observações</p>
-                <p className="font-medium">{match.notes}</p>
+                <p className="font-medium text-foreground">{match.notes}</p>
               </div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="catan-panel border-[1.5px]">
+        <Card className="catan-panel border-border">
           <CardHeader className="space-y-4">
-            <CardTitle className="flex items-center gap-2 text-catan-wood">
-              <Users className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <Users className="h-5 w-5 text-gold" />
               Jogadores ({match.players.length})
             </CardTitle>
           </CardHeader>
@@ -155,33 +156,35 @@ export default function MatchDetailsPage({ params }: PageProps) {
               {sortedPlayers.map((player, index) => (
                 <div
                   key={player.id}
-                  className={`flex items-center justify-between rounded-lg border p-4 ${
+                  className={cn(
+                    'flex items-center justify-between rounded-xl border p-4 transition-all',
                     player.isWinner
-                      ? 'border-catan-sheep/50 bg-catan-sheep/10'
-                      : ''
-                  }`}
+                      ? 'border-emerald-500/30 bg-emerald-500/10'
+                      : 'border-border bg-surface-base/50 hover:bg-surface-base'
+                  )}
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
+                      className={cn(
+                        'flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold',
                         player.isWinner
-                          ? 'bg-catan-sheep text-white'
-                          : 'bg-muted text-muted-foreground'
-                      }`}
+                          ? 'bg-emerald-500 text-white'
+                          : 'bg-surface-elevated text-muted-foreground'
+                      )}
                     >
                       {player.placement}
                     </div>
                     <div>
-                      <p className="font-medium">{player.user.nickname}</p>
+                      <p className="font-medium text-foreground">{player.user.nickname}</p>
                       <p className="text-sm text-muted-foreground">
                         {player.user.fullName} ({player.user.category})
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold">{player.victoryPoints} pts</p>
+                    <p className="font-display font-bold text-foreground">{player.victoryPoints} pts</p>
                     {player.isWinner && (
-                      <p className="text-xs text-catan-sheep">Vencedor</p>
+                      <p className="text-xs text-emerald-400">Vencedor</p>
                     )}
                   </div>
                 </div>

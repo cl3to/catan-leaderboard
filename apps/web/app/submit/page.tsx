@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
-import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -177,22 +176,22 @@ export default function SubmitMatchPage() {
   return (
     <main className="catan-app">
       <div className="catan-shell space-y-6 py-6">
-        <section className="catan-hero animate-rise">
+        <section className="catan-hero animate-slide-up">
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="catan-label bg-white/15 text-white">Resultados</span>
-            <h1 className="font-display text-3xl leading-tight sm:text-4xl">
+            <span className="catan-label">Resultados</span>
+            <h1 className="font-display text-3xl leading-tight sm:text-4xl text-foreground">
               Enviar Partida
             </h1>
-            <p className="text-sm text-white/90 sm:text-base">
+            <p className="text-sm text-muted-foreground sm:text-base">
               Registre o resultado de uma partida de Catan e concorrentes serão ranqueados.
             </p>
           </div>
         </section>
 
-        <Card className="catan-panel border-[1.5px]">
+        <Card className="catan-panel border-border animate-slide-up">
           <CardHeader className="space-y-4">
-            <CardTitle className="flex items-center gap-2 text-catan-wood">
-              <Swords className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-foreground">
+              <Swords className="h-5 w-5 text-gold" />
               Dados da Partida
             </CardTitle>
             <CardDescription>
@@ -208,9 +207,11 @@ export default function SubmitMatchPage() {
                     name="matchDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Data da Partida</FormLabel>
+                        <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                          Data da Partida
+                        </FormLabel>
                         <FormControl>
-                          <Input type="datetime-local" {...field} />
+                          <Input type="datetime-local" {...field} className="bg-surface-base border-border" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -222,9 +223,15 @@ export default function SubmitMatchPage() {
                     name="notes"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Observações (opcional)</FormLabel>
+                        <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                          Observações (opcional)
+                        </FormLabel>
                         <FormControl>
-                          <Input placeholder="Ex: Mesa 5, LSC" {...field} />
+                          <Input
+                            placeholder="Ex: Mesa 5, LSC"
+                            {...field}
+                            className="bg-surface-base border-border"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -234,7 +241,7 @@ export default function SubmitMatchPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label className="text-xs uppercase tracking-wider">
+                    <Label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
                       Jogadores ({fields.length})
                     </Label>
                     <Button
@@ -247,37 +254,38 @@ export default function SubmitMatchPage() {
                         append({ userId: '', placement: newPlacement, victoryPoints: newPoints });
                       }}
                       disabled={fields.length >= 6}
+                      className="text-gold hover:text-gold hover:bg-gold/10"
                     >
                       <Plus className="mr-1 h-4 w-4" />
                       Adicionar
                     </Button>
                   </div>
 
-                  <div className="space-y-3 rounded-lg border p-4">
+                  <div className="space-y-3 rounded-xl border border-border p-4 bg-surface-base/50">
                     {fields.map((field, index) => {
                       const selected = form.watch(`players.${index}.userId`);
                       return (
                         <div
                           key={field.id}
-                          className="flex flex-col gap-3 rounded-lg border bg-card/50 p-3 sm:flex-row sm:items-end"
+                          className="flex flex-col gap-3 rounded-lg border border-border/50 bg-surface-elevated p-4 sm:flex-row sm:items-end"
                         >
                           <FormField
                             control={form.control}
                             name={`players.${index}.userId`}
                             render={({ field }) => (
                               <FormItem className="flex-1">
-                                <FormLabel className="sm:hidden">Jogador</FormLabel>
+                                <FormLabel className="sm:hidden text-xs text-muted-foreground">Jogador</FormLabel>
                                 <Select
                                   onValueChange={field.onChange}
                                   defaultValue={field.value}
                                   value={field.value}
                                 >
                                   <FormControl>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="bg-surface-base border-border">
                                       <SelectValue placeholder="Selecione jogador" />
                                     </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                                  <SelectContent className="bg-surface-overlay border-border">
                                     {unusedPlayers
                                       .concat(
                                         availablePlayers.filter(
@@ -304,7 +312,7 @@ export default function SubmitMatchPage() {
                             name={`players.${index}.placement`}
                             render={({ field }) => (
                               <FormItem className="w-24">
-                                <FormLabel className="sm:hidden">Colocação</FormLabel>
+                                <FormLabel className="sm:hidden text-xs text-muted-foreground">Colocação</FormLabel>
                                 <FormControl>
                                   <Input
                                     type="number"
@@ -314,6 +322,7 @@ export default function SubmitMatchPage() {
                                     onChange={(e) =>
                                       field.onChange(parseInt(e.target.value) || 0)
                                     }
+                                    className="bg-surface-base border-border text-center"
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -326,7 +335,7 @@ export default function SubmitMatchPage() {
                             name={`players.${index}.victoryPoints`}
                             render={({ field }) => (
                               <FormItem className="w-24">
-                                <FormLabel className="sm:hidden">Pontos</FormLabel>
+                                <FormLabel className="sm:hidden text-xs text-muted-foreground">Pontos</FormLabel>
                                 <FormControl>
                                   <Input
                                     type="number"
@@ -336,6 +345,7 @@ export default function SubmitMatchPage() {
                                     onChange={(e) =>
                                       field.onChange(parseInt(e.target.value) || 0)
                                     }
+                                    className="bg-surface-base border-border text-center"
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -349,6 +359,7 @@ export default function SubmitMatchPage() {
                             size="icon"
                             onClick={() => remove(index)}
                             disabled={fields.length <= 2}
+                            className="text-muted-foreground hover:text-destructive"
                           >
                             <X className="h-4 w-4" />
                           </Button>

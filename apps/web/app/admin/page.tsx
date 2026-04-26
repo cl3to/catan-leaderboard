@@ -60,7 +60,6 @@ export default function AdminPage() {
         const res = await fetch('/api/v1/admin/submissions', { headers: getAuthHeaders() });
         if (res.ok) {
           const data = await res.json();
-          // Handle paginated response { data: [...], meta: {...} } or array [...]
           setSubmissions(Array.isArray(data) ? data : data.data || []);
         }
       } catch (e) {
@@ -78,7 +77,6 @@ export default function AdminPage() {
         const res = await fetch('/api/v1/admin/users', { headers: getAuthHeaders() });
         if (res.ok) {
           const data = await res.json();
-          // Handle paginated response { data: [...], meta: {...} } or array [...]
           setUsers(Array.isArray(data) ? data : data.data || []);
         }
       } catch (e) {
@@ -97,10 +95,10 @@ export default function AdminPage() {
   const handleApprove = async (id: string) => {
     setActionLoading(id);
     try {
-const res = await fetch(`/api/v1/admin/submissions/${id}/approve`, {
-          method: 'POST',
-          headers: getAuthHeaders(),
-        });
+      const res = await fetch(`/api/v1/admin/submissions/${id}/approve`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+      });
       if (res.ok) {
         toast({ title: 'Partida aprovada!' });
         setSubmissions((prev) => prev.filter((s) => s.id !== id));
@@ -118,10 +116,10 @@ const res = await fetch(`/api/v1/admin/submissions/${id}/approve`, {
   const handleReject = async (id: string) => {
     setActionLoading(id);
     try {
-const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
-          method: 'POST',
-          headers: getAuthHeaders(),
-        });
+      const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+      });
       if (res.ok) {
         toast({ title: 'Partida rejeitada!' });
         setSubmissions((prev) => prev.filter((s) => s.id !== id));
@@ -163,7 +161,7 @@ const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
     return (
       <main className="catan-app">
         <div className="catan-shell py-10 text-center">
-          <Loader2 className="animate-spin h-8 w-8 mx-auto text-muted-foreground" />
+          <Loader2 className="animate-spin h-8 w-8 mx-auto text-gold" />
         </div>
       </main>
     );
@@ -199,67 +197,64 @@ const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
   return (
     <main className="catan-app">
       <div className="catan-shell space-y-6 py-6">
-        <section className="catan-hero animate-rise">
+        <section className="catan-hero animate-slide-up">
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="catan-label bg-white/15 text-white">Administração</span>
-            <h1 className="font-display text-3xl leading-tight sm:text-4xl">
+            <span className="catan-label">Administração</span>
+            <h1 className="font-display text-3xl leading-tight sm:text-4xl text-foreground">
               Painel Admin
             </h1>
-            <p className="text-sm text-white/90 sm:text-base">
+            <p className="text-sm text-muted-foreground sm:text-base">
               Gerencie partidas pendentes e jogadores.
             </p>
           </div>
         </section>
 
         <Tabs defaultValue="matches" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="matches" className="gap-2">
+          <TabsList className="grid w-full grid-cols-2 rounded-xl bg-surface-base p-1 border border-border">
+            <TabsTrigger
+              value="matches"
+              className="gap-2 rounded-lg data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+            >
               <Swords className="h-4 w-4" />
               Partidas
             </TabsTrigger>
-            <TabsTrigger value="players" className="gap-2">
+            <TabsTrigger
+              value="players"
+              className="gap-2 rounded-lg data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+            >
               <Users className="h-4 w-4" />
               Jogadores
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="matches" className="space-y-4">
-            <Card className="catan-panel border-[1.5px]">
+            <Card className="catan-panel border-border">
               <CardHeader>
-                <CardTitle className="text-catan-wood">
-                  Partidas Pendentes
-                </CardTitle>
-                <CardDescription>
-                  Aprovar ou rejeitar partidas submetidas.
-                </CardDescription>
+                <CardTitle className="text-foreground">Partidas Pendentes</CardTitle>
+                <CardDescription>Aprovar ou rejeitar partidas submetidas.</CardDescription>
               </CardHeader>
               <CardContent>
                 {loading ? (
                   <div className="flex justify-center py-8">
-                    <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
+                    <Loader2 className="animate-spin h-6 w-6 text-gold" />
                   </div>
                 ) : submissions.length === 0 ? (
-                  <p className="py-8 text-center text-muted-foreground">
-                    Nenhuma partida pendente.
-                  </p>
+                  <p className="py-8 text-center text-muted-foreground">Nenhuma partida pendente.</p>
                 ) : (
                   <div className="space-y-4">
                     {submissions.map((sub) => (
                       <div
                         key={sub.id}
-                        className="flex flex-col gap-3 rounded-lg border p-4"
+                        className="flex flex-col gap-3 rounded-xl border border-border bg-surface-base/50 p-4"
                       >
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="font-medium">
+                            <p className="font-medium text-foreground">
                               {new Date(sub.matchDate).toLocaleDateString('pt-BR')}
                             </p>
-                            <p className="text-sm text-muted-foreground">
-                              {sub.notes || 'Sem observações'}
-                            </p>
+                            <p className="text-sm text-muted-foreground">{sub.notes || 'Sem observações'}</p>
                             <p className="text-xs text-muted-foreground">
-                              Criada em{' '}
-                              {new Date(sub.createdAt).toLocaleDateString('pt-BR')}
+                              Criada em {new Date(sub.createdAt).toLocaleDateString('pt-BR')}
                             </p>
                           </div>
                           <div className="flex gap-2">
@@ -268,6 +263,7 @@ const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
                               variant="outline"
                               onClick={() => handleReject(sub.id)}
                               disabled={actionLoading === sub.id}
+                              className="border-border"
                             >
                               <X className="h-4 w-4" />
                             </Button>
@@ -284,7 +280,7 @@ const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
                           {sub.players.map((p) => (
                             <span
                               key={p.userId}
-                              className="inline-flex items-center rounded-full border px-2.5 py-1 text-xs"
+                              className="inline-flex items-center rounded-full border border-border bg-surface-elevated px-2.5 py-1 text-xs"
                             >
                               {p.nickname} - {p.placement}º ({p.victoryPoints} pts)
                             </span>
@@ -299,17 +295,15 @@ const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
           </TabsContent>
 
           <TabsContent value="players" className="space-y-4">
-            <Card className="catan-panel border-[1.5px]">
+            <Card className="catan-panel border-border">
               <CardHeader>
-                <CardTitle className="text-catan-wood">Jogadores</CardTitle>
-                <CardDescription>
-                  Gerenciar usuários do sistema.
-                </CardDescription>
+                <CardTitle className="text-foreground">Jogadores</CardTitle>
+                <CardDescription>Gerenciar usuários do sistema.</CardDescription>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     placeholder="Buscar jogador..."
-                    className="pl-9"
+                    className="pl-9 bg-surface-base border-border"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
@@ -318,34 +312,28 @@ const res = await fetch(`/api/v1/admin/submissions/${id}/reject`, {
               <CardContent>
                 {usersLoading ? (
                   <div className="flex justify-center py-8">
-                    <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
+                    <Loader2 className="animate-spin h-6 w-6 text-gold" />
                   </div>
                 ) : filteredUsers.length === 0 ? (
-                  <p className="py-8 text-center text-muted-foreground">
-                    Nenhum jogador encontrado.
-                  </p>
+                  <p className="py-8 text-center text-muted-foreground">Nenhum jogador encontrado.</p>
                 ) : (
                   <div className="space-y-2">
                     {filteredUsers.map((user) => (
                       <div
                         key={user.userId}
-                        className="flex items-center justify-between rounded-lg border p-3"
+                        className="flex items-center justify-between rounded-xl border border-border bg-surface-base/50 p-3"
                       >
                         <div>
-                          <p className="font-medium">{user.nickname}</p>
+                          <p className="font-medium text-foreground">{user.nickname}</p>
                           <p className="text-sm text-muted-foreground">
                             {user.fullName} ({user.category})
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            {user.email}
-                          </p>
+                          <p className="text-xs text-muted-foreground">{user.email}</p>
                         </div>
                         <Button
                           size="sm"
                           variant={user.isActive ? 'destructive' : 'default'}
-                          onClick={() =>
-                            handleToggleUser(user.userId, user.isActive)
-                          }
+                          onClick={() => handleToggleUser(user.userId, user.isActive)}
                           disabled={actionLoading === user.userId}
                         >
                           {user.isActive ? 'Desativar' : 'Ativar'}

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { users } from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, Upload, Check } from 'lucide-react';
@@ -30,12 +30,12 @@ export const avatarPresets: Record<string, { icon: string; color: string; name: 
   city: { icon: '🏰', color: '#9B59B6', name: 'Cidade' },
   road: { icon: '🛤️', color: '#8B4513', name: 'Estrada' },
   desert: { icon: '🏜️', color: '#F4A460', name: 'Deserto' },
-  robber: { icon: '🏴', color: '#2C3E50', name: 'Ladrao' },
+  robber: { icon: '🏴', color: '#2C3E50', name: 'Ladrão' },
   dice: { icon: '🎲', color: '#E74C3C', name: 'Dado' },
   port: { icon: '⚓', color: '#3498DB', name: 'Porto' },
   knight: { icon: '🛡️', color: '#95A5A6', name: 'Cavaleiro' },
-vp: { icon: '⭐', color: '#F1C40F', name: 'PV' },
-  trade: { icon: '⚖️', color: '#1ABC9C', name: 'Comercio' },
+  vp: { icon: '⭐', color: '#F1C40F', name: 'PV' },
+  trade: { icon: '⚖️', color: '#1ABC9C', name: 'Comércio' },
 };
 
 const categoryLabels: Record<string, string> = {
@@ -53,8 +53,8 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
   const presets = Object.entries(avatarPresets).map(([key, value]) => ({
     key,
     ...value,
-    category: ['wood', 'brick', 'sheep', 'wheat', 'ore'].includes(key) ? 'recurso' : 
-             ['settlement', 'city', 'road'].includes(key) ? 'construcao' : 'especial',
+    category: ['wood', 'brick', 'sheep', 'wheat', 'ore'].includes(key) ? 'recurso' :
+              ['settlement', 'city', 'road'].includes(key) ? 'construcao' : 'especial',
   }));
 
   const presetMutation = useMutation({
@@ -78,7 +78,7 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
     input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
-      
+
       setUploading(true);
       try {
         await users.uploadAvatar(file);
@@ -111,10 +111,10 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
         <button
           onClick={() => setFilter('all')}
           className={cn(
-            'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+            'rounded-full px-3 py-1.5 text-xs font-semibold transition-all',
             filter === 'all'
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+              ? 'bg-gold/20 text-gold border border-gold/30'
+              : 'bg-surface-base text-muted-foreground hover:bg-surface-elevated border border-transparent'
           )}
         >
           Todos
@@ -124,10 +124,10 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
             key={key}
             onClick={() => setFilter(key)}
             className={cn(
-              'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+              'rounded-full px-3 py-1.5 text-xs font-semibold transition-all',
               filter === key
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                ? 'bg-gold/20 text-gold border border-gold/30'
+                : 'bg-surface-base text-muted-foreground hover:bg-surface-elevated border border-transparent'
             )}
           >
             {label}
@@ -135,50 +135,51 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
         ))}
       </div>
 
-      <div className="space-y-3 max-h-64 overflow-y-auto">
-          {Object.entries(groupedPresets).map(([category, items]) => (
-            <div key={category}>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                {categoryLabels[category] || category}
-              </p>
-              <div className="grid grid-cols-4 gap-2">
-                {items.map((preset) => (
-                  <button
-                    key={preset.key}
-                    onClick={() => handlePresetSelect(preset.key)}
-                    disabled={presetMutation.isPending}
-                    className={cn(
-                      'group relative flex flex-col items-center rounded-xl border p-2 transition-all hover:scale-105',
-                      'border-border/60 hover:border-border hover:bg-secondary/50',
-                      selectedKey === preset.key && 'border-primary bg-primary/10'
-                    )}
+      <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+        {Object.entries(groupedPresets).map(([category, items]) => (
+          <div key={category}>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {categoryLabels[category] || category}
+            </p>
+            <div className="grid grid-cols-4 gap-2">
+              {items.map((preset) => (
+                <button
+                  key={preset.key}
+                  onClick={() => handlePresetSelect(preset.key)}
+                  disabled={presetMutation.isPending}
+                  className={cn(
+                    'group relative flex flex-col items-center rounded-xl border p-2 transition-all hover:scale-105 hover:shadow-lg',
+                    'border-border/60 hover:border-gold/30 hover:bg-surface-elevated',
+                    selectedKey === preset.key && 'border-gold/50 bg-gold/10'
+                  )}
+                >
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-full text-2xl"
+                    style={{ backgroundColor: preset.color + '30' }}
                   >
-                    <div
-                      className="flex h-12 w-12 items-center justify-center rounded-full text-2xl"
-                      style={{ backgroundColor: preset.color + '30' }}
-                    >
-                      {preset.icon}
+                    {preset.icon}
+                  </div>
+                  <span className="mt-1 text-[10px] text-muted-foreground">
+                    {preset.name}
+                  </span>
+                  {selectedKey === preset.key && (
+                    <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-background">
+                      <Check className="h-3 w-3" />
                     </div>
-                    <span className="mt-1 text-[10px] text-muted-foreground">
-                      {preset.name}
-                    </span>
-                    {selectedKey === preset.key && (
-                      <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                        <Check className="h-3 w-3" />
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
+                  )}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-      <Card className="border-dashed">
+          </div>
+        ))}
+      </div>
+
+      <Card className="border-dashed border-border">
         <CardContent className="p-3">
           <button
             onClick={handleUpload}
             disabled={uploading}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-primary hover:bg-secondary/50 hover:text-primary disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-gold/50 hover:bg-gold/5 hover:text-gold disabled:opacity-50"
           >
             {uploading ? (
               <>

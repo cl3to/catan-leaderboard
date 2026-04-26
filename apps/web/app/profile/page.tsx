@@ -93,7 +93,7 @@ export default function ProfilePage() {
     return (
       <main className="catan-app">
         <div className="catan-shell py-10 text-center">
-          <Loader2 className="animate-spin h-8 w-8 mx-auto text-muted-foreground" />
+          <Loader2 className="animate-spin h-8 w-8 mx-auto text-gold" />
         </div>
       </main>
     );
@@ -112,27 +112,26 @@ export default function ProfilePage() {
   return (
     <main className="catan-app">
       <div className="catan-shell space-y-6 py-6">
-        <section className="catan-hero animate-rise">
+        <section className="catan-hero animate-slide-up">
           <div className="relative z-10 max-w-3xl space-y-3">
-            <span className="catan-label bg-white/15 text-white">Perfil</span>
-            <h1 className="font-display text-3xl leading-tight sm:text-4xl">
+            <span className="catan-label">Perfil</span>
+            <h1 className="font-display text-3xl leading-tight sm:text-4xl text-foreground">
               Meu Perfil
             </h1>
           </div>
         </section>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Profile Card */}
-          <Card className="catan-panel border-[1.5px]">
+          <Card className="catan-panel border-border">
             <CardHeader className="space-y-4">
-              <CardTitle className="flex items-center gap-2 text-catan-wood">
-                <User className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-foreground">
+                <User className="h-5 w-5 text-gold" />
                 Informações
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {profileLoading ? (
-                <Loader2 className="animate-spin h-6 w-6" />
+                <Loader2 className="animate-spin h-6 w-6 text-gold" />
               ) : profile ? (
                 <>
                   <div className="flex items-center gap-4">
@@ -143,17 +142,17 @@ export default function ProfilePage() {
                             <img
                               src={profile.avatarUrl}
                               alt="Avatar"
-                              className="h-16 w-16 rounded-full object-cover border border-white/35"
+                              className="h-16 w-16 rounded-full object-cover border border-gold/30"
                             />
                           ) : profile.avatarMode === 'preset' && profile.avatarKey && avatarPresets[profile.avatarKey] ? (
                             <div
-                              className="flex h-16 w-16 items-center justify-center rounded-full text-3xl border border-white/35"
+                              className="flex h-16 w-16 items-center justify-center rounded-full text-3xl border border-gold/30"
                               style={{ background: avatarPresets[profile.avatarKey].color + '30' }}
                             >
                               {avatarPresets[profile.avatarKey].icon}
                             </div>
                           ) : (
-                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-catan-brick to-catan-wood text-2xl font-bold text-white transition-transform group-hover:scale-105">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gold to-gold-dark text-2xl font-bold text-background transition-transform group-hover:scale-105">
                               {profile.nickname?.charAt(0).toUpperCase()}
                             </div>
                           )}
@@ -162,103 +161,103 @@ export default function ProfilePage() {
                           </div>
                         </button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-md">
+                      <DialogContent className="max-w-md bg-surface-elevated border-border">
                         <DialogHeader>
-                          <DialogTitle>Escolher Avatar</DialogTitle>
+                          <DialogTitle className="text-foreground">Escolher Avatar</DialogTitle>
                           <DialogDescription>
-                            Selecione um avatar tematico do Catan ou carregue uma imagem.
+                            Selecione um avatar temático do Catan ou carregue uma imagem.
                           </DialogDescription>
                         </DialogHeader>
                         <AvatarPicker />
                       </DialogContent>
                     </Dialog>
                     <div>
-                      <p className="text-xl font-bold">{profile.nickname}</p>
+                      <p className="text-xl font-semibold text-foreground">{profile.nickname}</p>
                       <p className="text-sm text-muted-foreground">{profile.fullName}</p>
                     </div>
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Email</span>
-                      <span>{profile.email}</span>
+                      <span className="text-foreground">{profile.email}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Categoria</span>
-                      <span className="capitalize">{profile.category}</span>
+                      <span className="text-foreground capitalize">{profile.category}</span>
                     </div>
                     {profile.program && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Curso</span>
-                        <span>{profile.program}</span>
+                        <span className="text-foreground">{profile.program}</span>
                       </div>
                     )}
                     {profile.bio && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Bio</span>
-                        <span>{profile.bio}</span>
+                        <span className="text-foreground">{profile.bio}</span>
                       </div>
                     )}
-                    <div className="mt-4 flex flex-wrap gap-2 border-t pt-4">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="gap-2">
-                            <Edit2 className="h-4 w-4" /> Editar Perfil
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-md">
-                          <DialogHeader>
-                            <DialogTitle>Editar Perfil</DialogTitle>
-                            <DialogDescription>
-                              Atualize suas informações pessoais.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <ProfileEditForm profile={profile} />
-                        </DialogContent>
-                      </Dialog>
-                      
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="gap-2">
-                            <Key className="h-4 w-4" /> Alterar Senha
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-md">
-                          <DialogHeader>
-                            <DialogTitle>Alterar Senha</DialogTitle>
-                            <DialogDescription>
-                              Defina uma nova senha para sua conta.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <PasswordChangeForm />
-                        </DialogContent>
-                      </Dialog>
-                      
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="gap-2 text-red-500 hover:text-red-500">
-                            <Trash2 className="h-4 w-4" /> Excluir Conta
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-md">
-                          <DialogHeader>
-                            <DialogTitle className="text-red-500">Excluir Conta</DialogTitle>
-                            <DialogDescription>
-                              Esta ação não pode ser desfeita. Todos os seus dados serão removidos.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <DeleteAccountForm />
-                        </DialogContent>
-                      </Dialog>
-                      
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="gap-2 text-muted-foreground"
-                        onClick={() => signOut({ callbackUrl: '/login' })}
-                      >
-                        <LogOut className="h-4 w-4" /> Sair
-                      </Button>
-                    </div>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2 border-t border-border pt-4">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="gap-2 border-border hover:bg-surface-base">
+                          <Edit2 className="h-4 w-4" /> Editar Perfil
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md bg-surface-elevated border-border">
+                        <DialogHeader>
+                          <DialogTitle className="text-foreground">Editar Perfil</DialogTitle>
+                          <DialogDescription>
+                            Atualize suas informações pessoais.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <ProfileEditForm profile={profile} />
+                      </DialogContent>
+                    </Dialog>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="gap-2 border-border hover:bg-surface-base">
+                          <Key className="h-4 w-4" /> Alterar Senha
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md bg-surface-elevated border-border">
+                        <DialogHeader>
+                          <DialogTitle className="text-foreground">Alterar Senha</DialogTitle>
+                          <DialogDescription>
+                            Defina uma nova senha para sua conta.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <PasswordChangeForm />
+                      </DialogContent>
+                    </Dialog>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="gap-2 text-red-400 hover:text-red-300 hover:bg-red-950/20 border-border">
+                          <Trash2 className="h-4 w-4" /> Excluir Conta
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md bg-surface-elevated border-border">
+                        <DialogHeader>
+                          <DialogTitle className="text-red-400">Excluir Conta</DialogTitle>
+                          <DialogDescription>
+                            Esta ação não pode ser desfeita. Todos os seus dados serão removidos.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DeleteAccountForm />
+                      </DialogContent>
+                    </Dialog>
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="gap-2 text-muted-foreground hover:text-foreground"
+                      onClick={() => signOut({ callbackUrl: '/login' })}
+                    >
+                      <LogOut className="h-4 w-4" /> Sair
+                    </Button>
                   </div>
                 </>
               ) : (
@@ -267,11 +266,10 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Stats Card */}
-          <Card className="catan-panel border-[1.5px]">
+          <Card className="catan-panel border-border">
             <CardHeader className="space-y-4">
-              <CardTitle className="flex items-center gap-2 text-catan-wood">
-                <Trophy className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-foreground">
+                <Trophy className="h-5 w-5 text-gold" />
                 Estatísticas
               </CardTitle>
               <CardDescription>
@@ -280,27 +278,29 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               {statsLoading ? (
-                <Loader2 className="animate-spin h-6 w-6" />
+                <Loader2 className="animate-spin h-6 w-6 text-gold" />
               ) : stats ? (
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="rounded-lg bg-secondary/65 p-4 text-center">
-                    <Trophy className="mx-auto h-6 w-6 text-catan-sheep" />
-                    <p className="mt-1 text-2xl font-bold">{stats.rank}º</p>
+                  <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
+                    <Trophy className="mx-auto h-6 w-6 text-gold mb-2" />
+                    <p className="text-2xl font-display font-bold text-gold">{stats.rank}º</p>
                     <p className="text-xs text-muted-foreground">Posição</p>
                   </div>
-                  <div className="rounded-lg bg-secondary/65 p-4 text-center">
-                    <Award className="mx-auto h-6 w-6 text-catan-brick" />
-                    <p className="mt-1 text-2xl font-bold">{stats.totalPoints}</p>
+                  <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
+                    <Award className="mx-auto h-6 w-6 text-gold mb-2" />
+                    <p className="text-2xl font-display font-bold text-foreground">{stats.totalPoints}</p>
                     <p className="text-xs text-muted-foreground">Pontos</p>
                   </div>
-                  <div className="rounded-lg bg-secondary/65 p-4 text-center">
-                    <Swords className="mx-auto h-6 w-6 text-catan-wood" />
-                    <p className="mt-1 text-2xl font-bold">{stats.wins}</p>
+                  <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
+                    <Swords className="mx-auto h-6 w-6 text-gold mb-2" />
+                    <p className="text-2xl font-display font-bold text-foreground">{stats.wins}</p>
                     <p className="text-xs text-muted-foreground">Vitórias</p>
                   </div>
-                  <div className="rounded-lg bg-secondary/65 p-4 text-center">
-                    <TrendingUp className="mx-auto h-6 w-6 text-catan-ocean" />
-                    <p className="mt-1 text-2xl font-bold">{stats.matches > 0 ? Math.round((stats.wins / stats.matches) * 100) : 0}%</p>
+                  <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
+                    <TrendingUp className="mx-auto h-6 w-6 text-emerald-400 mb-2" />
+                    <p className="text-2xl font-display font-bold text-emerald-400">
+                      {stats.matches > 0 ? Math.round((stats.wins / stats.matches) * 100) : 0}%
+                    </p>
                     <p className="text-xs text-muted-foreground">Taxa Vitória</p>
                   </div>
                 </div>
@@ -310,12 +310,11 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Recent Form */}
           {stats && stats.recentForm && stats.recentForm.length > 0 && (
-            <Card className="catan-panel border-[1.5px] lg:col-span-2">
+            <Card className="catan-panel border-border lg:col-span-2">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-catan-wood">
-                  <Calendar className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Calendar className="h-5 w-5 text-gold" />
                   Desempenho Recente
                 </CardTitle>
               </CardHeader>
@@ -327,8 +326,8 @@ export default function ProfilePage() {
                       className={cn(
                         'flex h-10 w-10 items-center justify-center rounded-lg text-lg font-bold',
                         result === 'W'
-                          ? 'bg-catan-sheep/20 text-catan-sheep'
-                          : 'bg-secondary text-muted-foreground'
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-surface-base text-muted-foreground border border-border'
                       )}
                     >
                       {result}
@@ -380,34 +379,38 @@ function ProfileEditForm({ profile }: { profile: ProfileData }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <label className="text-sm font-medium">Nome completo</label>
+        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nome completo</label>
         <Input
           value={formData.fullName}
           onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+          className="bg-surface-base border-border"
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Apelido</label>
+        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Apelido</label>
         <Input
           value={formData.nickname}
           onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+          className="bg-surface-base border-border"
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Curso</label>
+        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Curso</label>
         <Input
           value={formData.program}
           onChange={(e) => setFormData({ ...formData, program: e.target.value })}
+          className="bg-surface-base border-border"
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Bio</label>
+        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Bio</label>
         <Input
           value={formData.bio}
           onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+          className="bg-surface-base border-border"
         />
       </div>
-      {message && <p className="text-sm">{message}</p>}
+      {message && <p className="text-sm text-emerald-400">{message}</p>}
       <Button type="submit" disabled={saving} className="w-full">
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Salvar'}
       </Button>
@@ -424,7 +427,7 @@ function PasswordChangeForm() {
   const [error, setError] = React.useState('');
 
   const mutation = useMutation({
-    mutationFn: ({ current, new: newP }: { current: string; new: string }) => 
+    mutationFn: ({ current, new: newP }: { current: string; new: string }) =>
       users.changePassword(current, newP),
     onSuccess: () => {
       setMessage('Senha alterada!');
@@ -457,31 +460,34 @@ function PasswordChangeForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <label className="text-sm font-medium">Senha atual</label>
+        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Senha atual</label>
         <Input
           type="password"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
+          className="bg-surface-base border-border"
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Nova senha</label>
+        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nova senha</label>
         <Input
           type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
+          className="bg-surface-base border-border"
         />
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium">Confirmar senha</label>
+        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Confirmar senha</label>
         <Input
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          className="bg-surface-base border-border"
         />
       </div>
-      {message && <p className="text-sm text-green-500">{message}</p>}
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {message && <p className="text-sm text-emerald-400">{message}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
       <Button type="submit" disabled={saving} className="w-full">
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Alterar Senha'}
       </Button>
@@ -515,19 +521,20 @@ function DeleteAccountForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Para confirmar, digite <strong>EXCLUIR</strong> abaixo:
+        Para confirmar, digite <strong className="text-foreground">EXCLUIR</strong> abaixo:
       </p>
       <div className="space-y-2">
         <Input
           value={confirmText}
           onChange={(e) => setConfirmText(e.target.value)}
           placeholder="EXCLUIR"
+          className="bg-surface-base border-border"
         />
       </div>
-      {message && <p className="text-sm text-red-500">{message}</p>}
-      <Button 
-        type="submit" 
-        disabled={saving || confirmText !== 'EXCLUIR'} 
+      {message && <p className="text-sm text-red-400">{message}</p>}
+      <Button
+        type="submit"
+        disabled={saving || confirmText !== 'EXCLUIR'}
         className="w-full bg-red-500 hover:bg-red-600"
       >
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Excluir Minha Conta'}
