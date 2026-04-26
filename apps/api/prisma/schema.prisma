@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                BigInt              @id @default(autoincrement())
+  email             String              @unique
+  passwordHash      String              @map("password_hash")
+  role              UserRole
+  isActive          Boolean             @default(true) @map("is_active")
+  createdAt         DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime            @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt         DateTime?           @map("deleted_at") @db.Timestamptz(6)
+  deletedByUserId   BigInt?             @map("deleted_by_user_id")
+  deleteReason      String?             @map("delete_reason")
+
+  deletedBy         User?               @relation("UserDeletedBy", fields: [deletedByUserId], references: [id])
+  deletedUsers      User[]              @relation("UserDeletedBy")
+  profile           PlayerProfile?
+  submissions       MatchSubmission[]   @relation("SubmissionSubmittedBy")
+  reviewedMatches   MatchSubmission[]   @relation("SubmissionReviewedBy")
+  deletedMatches    MatchSubmission[]   @relation("SubmissionDeletedBy")
+  matchPlayers      MatchSubmissionPlayer[]
+  scoreEvents       ScoreEvent[]
+  auditLogs         AuditLog[]          @relation("AuditLogActor")
+  scheduledMatches  ScheduledMatch[]
+  scheduledPlayers  ScheduledMatchPlayer[]
+
+  @@index([isActive])
+  @@index([deletedAt])
+  @@index([email])
+  @@map("users")
+}
+
+model PlayerProfile {
+  userId      BigInt    @id @map("user_id")
+  fullName    String    @map("full_name")
+  nickname    String    @unique
+  category    Category
+  program     String?
+  bio         String?
+  avatarMode  AvatarMode @default(preset) @map("avatar_mode")
+  avatarKey   String?    @map("avatar_key")
+  avatarUrl   String?    @map("avatar_url")
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime   @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([nickname])
+  @@index([category])
+  @@index([avatarMode])
+  @@index([avatarKey])
+  @@map("player_profiles")
+}
+
+model BotClient {
+  id          BigInt      @id @default(autoincrement())
+  name        String      @unique
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  tokens      BotToken[]
+  submissions MatchSubmission[] @relation("SubmissionByBot")
+  auditLogs   AuditLog[]  @relation("AuditLogBot")
+
+  @@map("bot_clients")
+}
+
+model BotToken {
+  id            BigInt      @id @default(autoincrement())
+  botClientId   BigInt      @map("bot_client_id")
+  tokenHash     String      @unique @map("token_hash")
+  scopes        String[]
+  isActive      Boolean     @default(true) @map("is_active")
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  lastUsedAt    DateTime?   @map("last_used_at") @db.Timestamptz(6)
+
+  botClient     BotClient   @relation(fields: [botClientId], references: [id], onDelete: Cascade)
+
+  @@map("bot_tokens")
+}
+
+model MatchSubmission {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  submittedByUserId     BigInt?                 @map("submitted_by_user_id")
+  submittedByBotId      BigInt?                 @map("submitted_by_bot_client_id")
+  externalMatchId       String?                 @map("external_match_id")
+  matchDate             DateTime                @map("match_date") @db.Date
+  notes                 String?
+  status                MatchStatus             @default(pending)
+  reviewedByUserId      BigInt?                 @map("reviewed_by_user_id")
+  reviewedAt            DateTime?               @map("reviewed_at") @db.Timestamptz(6)
+  rejectReason          String?                 @map("reject_reason")
+  createdAt             DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime                @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt             DateTime?               @map("deleted_at") @db.Timestamptz(6)
+  deletedByUserId       BigInt?                 @map("deleted_by_user_id")
+  deleteReason          String?                 @map("delete_reason")
+
+  submittedBy User? @relation("SubmissionSubmittedBy", fields: [submittedByUserId], references: [id])
+  submittedByBot BotClient? @relation("SubmissionByBot", fields: [submittedByBotId], references: [id])
+  reviewedBy User? @relation("SubmissionReviewedBy", fields: [reviewedByUserId], references: [id])
+  deletedBy User? @relation("SubmissionDeletedBy", fields: [deletedByUserId], references: [id])
+  players MatchSubmissionPlayer[]
+  scoreEvents ScoreEvent[]
+
+  @@unique([submittedByBotId, externalMatchId], name: "uq_match_external_by_bot")
+  @@index([status])
+  @@index([matchDate])
+  @@index([deletedAt])
+  @@map("match_submissions")
+}
+
+model MatchSubmissionPlayer {
+  id            BigInt          @id @default(autoincrement())
+  submissionId  String          @map("submission_id") @db.Uuid
+  userId        BigInt          @map("user_id")
+  placement     Int
+  victoryPoints Int             @map("victory_points")
+  isWinner      Boolean         @default(false) @map("is_winner")
+
+  submission    MatchSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id])
+
+  @@unique([submissionId, userId], name: "uq_submission_user")
+  @@map("match_submission_players")
+}
+
+model ScoreEvent {
+  id            BigInt          @id @default(autoincrement())
+  submissionId  String          @map("submission_id") @db.Uuid
+  userId        BigInt          @map("user_id")
+  pointsDelta   Int             @map("points_delta")
+  isWin         Boolean         @default(false) @map("is_win")
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  submission    MatchSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id])
+
+  @@unique([submissionId, userId], name: "uq_score_event_submission_user")
+  @@index([userId])
+  @@map("score_events")
+}
+
+model AuditLog {
+  id              BigInt      @id @default(autoincrement())
+  actorUserId     BigInt?     @map("actor_user_id")
+  actorBotId      BigInt?     @map("actor_bot_client_id")
+  action          String
+  targetType      String      @map("target_type")
+  targetId        String      @map("target_id")
+  meta            Json?
+  createdAt       DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  actorUser       User?       @relation("AuditLogActor", fields: [actorUserId], references: [id])
+  actorBot        BotClient?  @relation("AuditLogBot", fields: [actorBotId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model ScheduledMatch {
+  id            String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creatorId     BigInt                  @map("creator_user_id")
+  title         String?
+  scheduledDate DateTime                @map("scheduled_date") @db.Timestamptz(6)
+  minPlayers    Int                     @default(3) @map("min_players")
+  maxPlayers    Int                     @default(4) @map("max_players")
+  status        ScheduledMatchStatus    @default(open)
+  createdAt     DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  creator       User                    @relation(fields: [creatorId], references: [id])
+  players       ScheduledMatchPlayer[]
+
+  @@index([scheduledDate])
+  @@index([status])
+  @@map("scheduled_matches")
+}
+
+model ScheduledMatchPlayer {
+  id        BigInt         @id @default(autoincrement())
+  matchId   String         @map("match_id") @db.Uuid
+  userId    BigInt         @map("user_id")
+  joinedAt  DateTime       @default(now()) @map("joined_at") @db.Timestamptz(6)
+
+  match     ScheduledMatch @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id])
+
+  @@unique([matchId, userId])
+  @@index([matchId])
+  @@index([userId])
+  @@map("scheduled_match_players")
+}
+
+enum UserRole {
+  player
+  admin
+}
+
+enum Category {
+  graduacao
+  pos
+}
+
+enum AvatarMode {
+  preset
+  upload
+}
+
+enum MatchStatus {
+  pending
+  approved
+  rejected
+}
+
+enum ScheduledMatchStatus {
+  open
+  cancelled
+  completed
+}

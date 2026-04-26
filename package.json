@@ -1,0 +1,30 @@
+{
+  "name": "catan-leaderboard",
+  "version": "2.0.0",
+  "private": true,
+  "description": "LSC Catan Leaderboard - NestJS + Next.js + TypeScript",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "db:generate": "cd packages/database && pnpm generate",
+    "db:migrate": "cd packages/database && pnpm migrate",
+    "db:studio": "cd packages/database && pnpm studio",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down -v",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "date-fns": "^4.1.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

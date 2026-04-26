@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 34 58% 95%;
+    --foreground: 20 28% 14%;
+    --card: 38 42% 98%;
+    --card-foreground: 20 28% 14%;
+    --popover: 40 42% 98%;
+    --popover-foreground: 20 30% 12%;
+    --primary: 18 68% 39%;
+    --primary-foreground: 40 70% 97%;
+    --secondary: 43 40% 89%;
+    --secondary-foreground: 20 32% 18%;
+    --muted: 36 34% 88%;
+    --muted-foreground: 21 19% 35%;
+    --accent: 131 31% 42%;
+    --accent-foreground: 50 80% 97%;
+    --destructive: 4 70% 48%;
+    --destructive-foreground: 45 100% 97%;
+    --border: 31 35% 72%;
+    --input: 30 34% 77%;
+    --ring: 42 93% 46%;
+    --radius: 1rem;
+
+    --catan-brick: 10 72% 43%;
+    --catan-wood: 28 61% 35%;
+    --catan-sheep: 132 30% 43%;
+    --catan-wheat: 44 94% 52%;
+    --catan-ore: 216 10% 34%;
+    --catan-ocean: 206 54% 43%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 14% 8%, hsl(var(--catan-wheat) / 0.2), transparent 46%),
+      radial-gradient(circle at 86% 12%, hsl(var(--catan-ocean) / 0.2), transparent 44%),
+      linear-gradient(170deg, #f7e6c4 0%, #efe0bf 42%, #f4ebd3 100%);
+    color: hsl(var(--foreground));
+    font-family: var(--font-body), sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), serif;
+    letter-spacing: 0.01em;
+  }
+}
+
+@layer components {
+  .catan-app {
+    @apply relative min-h-screen pb-10;
+  }
+
+  .catan-app::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.2;
+    background-image: radial-gradient(circle at 1px 1px, #735f46 1px, transparent 0);
+    background-size: 20px 20px;
+    z-index: 0;
+  }
+
+  .catan-shell {
+    @apply relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6;
+  }
+
+  .catan-hero {
+    @apply relative overflow-hidden rounded-3xl border px-5 py-7 text-primary-foreground shadow-xl sm:px-8 sm:py-10;
+    border-color: hsl(var(--catan-wood) / 0.6);
+    background:
+      linear-gradient(140deg, hsl(var(--catan-brick)), hsl(var(--catan-wood)) 54%, hsl(var(--catan-ocean)) 120%);
+  }
+
+  .catan-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.22;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0.28),
+        rgba(255, 255, 255, 0.28) 2px,
+        transparent 2px,
+        transparent 24px
+      );
+  }
+
+  .catan-panel {
+    @apply rounded-3xl border bg-card/90 shadow-lg backdrop-blur-sm;
+    border-color: hsl(var(--border));
+  }
+
+  .catan-label {
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.17em];
+    border-color: hsl(var(--catan-wheat) / 0.7);
+    background: hsl(var(--catan-wheat) / 0.18);
+    color: hsl(var(--catan-wood));
+  }
+
+  .hex-badge {
+    @apply relative inline-flex h-9 min-w-9 items-center justify-center px-2 text-sm font-bold text-white;
+    clip-path: polygon(24% 5%, 76% 5%, 100% 50%, 76% 95%, 24% 95%, 0% 50%);
+    background: linear-gradient(150deg, hsl(var(--catan-ore)), hsl(var(--catan-ocean)));
+  }
+
+  .terrain-chip {
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold;
+    border-color: hsl(var(--border));
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .animate-rise {
+    animation: rise 520ms ease both;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

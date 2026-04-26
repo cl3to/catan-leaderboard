@@ -1,12 +1,14 @@
-# Liga Socialista do Catan - LSC Leaderboard
+# Liga Socialista do Catan - LSC Leaderboard v2
 
-Aplicacao self-hosted para ranking de CATAN do LSC (IC/UNICAMP), com moderacao de pontuacao por admin e API para bots.
+Aplicacao self-hosted para ranking de CATAN do LSC (IC/UNICAMP), com moderacao por admin, API para bots, atualizacoes em tempo real e calendario de partidas.
 
 ## Stack
 
-- Web: React + Vite (container Nginx)
-- API: Node.js + Express + PostgreSQL
-- Banco: PostgreSQL 18 (`postgres:18-alpine`)
+- Frontend: Next.js 14 (App Router) + React + TypeScript + Tailwind CSS
+- Backend: NestJS 10 + Prisma ORM
+- Banco: PostgreSQL 16 (`postgres:16-alpine`)
+- Auth: NextAuth.js v5 (web) + JWT (API)
+- Real-time: Socket.io
 - Orquestracao: Docker Compose
 
 ## Subir localmente
@@ -23,47 +25,106 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-3. Acesse:
+3. Rode migrations:
+
+```bash
+docker compose --profile migrate run --rm migrate
+```
+
+4. Popule dados demo (admin, bot, jogadores, partidas e calendario):
+
+```bash
+docker compose exec api npx ts-node prisma/seed.ts
+```
+
+5. Acesse:
 - Web: `http://localhost:3000`
-- API health: `http://localhost:3000/api/v1/health`
-- Swagger UI: `http://localhost:3000/api/v1/docs`
+- Calendario: `http://localhost:3000/calendar`
+- API health: `http://localhost:4000/health`
+- Swagger UI: `http://localhost:4000/api/docs`
+
+## Credenciais demo
+
+- Admin: `admin@example.com` / valor de `ADMIN_PASSWORD` no `.env`
+- Players demo: `*@lsc.unicamp.br` / `player123`
 
 ## Fluxo de pontuacao
 
-1. Jogador ou bot envia resultado estruturado de partida (`pending`)
+1. Jogador ou bot envia resultado (`pending`)
 2. Admin aprova/rejeita
-3. Apenas resultados `approved` entram no ranking
+3. Apenas resultados `approved` entram no leaderboard
 
-## Regras principais
+## Funcionalidades principais
 
-- Leaderboard ordena por padrao por `vitorias` (com filtros e ordenacao customizavel)
-- Usuarios podem usar avatar preset CATAN ou upload de imagem
-- Login aceita email ou nickname
-- Admin pode editar/excluir partidas passadas
-- Exclusoes de usuarios e partidas sao logicas (historico preservado)
+- Leaderboard com filtros e ordenacao
+- Agenda de partidas (`scheduled_matches`)
+- WebSocket para eventos em tempo real
+- Login por email/nickname
+- Upload de avatar (ou avatar preset)
+- Soft delete para usuarios e partidas
 
-## API para bot
+## Endpoints principais
 
-Autenticacao por bearer token (hash guardado no banco).
+Publicos:
+- `GET /health`
+- `GET /leaderboard`
+- `GET /matches`
+- `GET /matches/:id`
+- `POST /auth/register`
+- `POST /auth/login`
 
-Token padrao inicial: valor de `BOT_DEFAULT_TOKEN` no `.env`.
+Protegidos (JWT):
+- `GET /users/me`
+- `PUT /users/me`
+- `POST /matches`
+- `POST /scheduled-matches`
+- `POST /scheduled-matches/:id/join`
+- `DELETE /scheduled-matches/:id/leave`
 
-Endpoints:
-- `GET /api/v1/bot/leaderboard`
-- `POST /api/v1/bot/matches`
-- `GET /api/v1/bot/matches/:id`
-- `GET /api/v1/bot/players?query=...`
+Admin:
+- `GET /admin/submissions`
+- `POST /admin/submissions/:id/approve`
+- `POST /admin/submissions/:id/reject`
+- `GET /admin/users`
+- `PUT /admin/users/:id`
+- `DELETE /admin/users/:id`
 
-## Endpoints de administracao adicionados
+Bot:
+- `GET /bot/leaderboard`
+- `GET /bot/players`
+- `POST /bot/matches`
+- `GET /bot/matches/:id`
 
-- `GET /api/v1/admin/users`
-- `PUT /api/v1/admin/users/:id`
-- `DELETE /api/v1/admin/users/:id` (remocao logica)
-- `PUT /api/v1/admin/matches/:id`
-- `DELETE /api/v1/admin/matches/:id` (remocao logica)
+## Comandos uteis
 
-## Observacoes de deploy com Nginx Proxy Manager
+```bash
+# subir stack
+docker compose up -d --build
 
-- Exponha apenas o container `web` (porta 80 interna / 3000 host)
-- `api` e `db` devem permanecer internos na rede do compose
-- O frontend usa `/api/*` e o Nginx interno do `web` faz proxy para `api:4000`
+# logs
+docker compose logs -f
+
+# derrubar stack
+docker compose down
+
+# derrubar com volumes (apaga dados)
+docker compose down -v
+
+# abrir psql
+docker compose exec db psql -U catan -d catan
+
+# rerun seed
+docker compose exec api npx ts-node prisma/seed.ts
+```
+
+## Troubleshooting rapido
+
+- API sobe e cai com `Cannot find module '/app/dist/main.js'`:
+
+```bash
+docker compose build --no-cache api
+docker compose up -d api
+```
+
+- Conflito de portas:
+  ajuste mapeamentos no `docker-compose.yml`.
