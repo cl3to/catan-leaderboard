@@ -1,0 +1,96 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: catan-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-catan}
+      POSTGRES_USER: ${POSTGRES_USER:-catan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-catan_dev_password}
+    volumes:
+      - db_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-catan} -d ${POSTGRES_DB:-catan}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  migrate:
+    image: postgres:18-alpine
+    container_name: catan-migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-catan}
+      POSTGRES_USER: ${POSTGRES_USER:-catan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-catan_dev_password}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-catan_dev_password}
+    volumes:
+      - ./infra/sql:/sql:ro
+    command: >
+      sh -c "for file in /sql/*.sql; do
+      echo applying $$file;
+      psql -v ON_ERROR_STOP=1 -h db -U $$POSTGRES_USER -d $$POSTGRES_DB -f $$file;
+      done"
+    restart: "no"
+
+  api:
+    build:
+      context: ./api
+    container_name: catan-api
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://${POSTGRES_USER:-catan}:${POSTGRES_PASSWORD:-catan_dev_password}@db:5432/${POSTGRES_DB:-catan}
+      JWT_SECRET: ${JWT_SECRET:-change-this-secret}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@lsc.unicamp.br}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe123!}
+      ADMIN_FULL_NAME: ${ADMIN_FULL_NAME:-Admin LSC}
+      ADMIN_NICKNAME: ${ADMIN_NICKNAME:-admin_lsc}
+      BOT_DEFAULT_TOKEN: ${BOT_DEFAULT_TOKEN:-lsc-bot-secret-change-me}
+      UPLOAD_DIR: /app/uploads
+    expose:
+      - "4000"
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+    container_name: catan-web
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+
+  backup:
+    image: postgres:18-alpine
+    container_name: catan-backup
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-catan}
+      POSTGRES_USER: ${POSTGRES_USER:-catan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-catan_dev_password}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-catan_dev_password}
+    volumes:
+      - ./backups:/backups
+    command: >
+      sh -c "mkdir -p /backups && while true; do
+      pg_dump -h db -U $$POSTGRES_USER -d $$POSTGRES_DB > /backups/catan_$$(date +%F_%H-%M-%S).sql;
+      find /backups -type f -mtime +14 -delete;
+      sleep 86400;
+      done"
+    restart: unless-stopped
+
+volumes:
+  db_data:
