@@ -11,6 +11,11 @@ export class LeaderboardFilters {
   @IsOptional()
   @IsIn(['week', 'month', 'year', 'all'])
   timeRange?: 'week' | 'month' | 'year' | 'all';
+
+  @ApiPropertyOptional({ enum: ['wins', 'points', 'winRate', 'matches'] })
+  @IsOptional()
+  @IsIn(['wins', 'points', 'winRate', 'matches'])
+  sortBy?: 'wins' | 'points' | 'winRate' | 'matches';
 }
 
 export class LeaderboardEntryDto {

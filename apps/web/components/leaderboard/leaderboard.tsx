@@ -19,9 +19,12 @@ interface LeaderboardEntry {
   fullName: string;
   category: 'graduacao' | 'pos';
   avatarUrl: string | null;
+  avatarKey: string | null;
+  avatarMode: string;
   totalPoints: number;
   wins: number;
   matches: number;
+  winRate: number;
   rank: number;
 }
 
@@ -36,6 +39,13 @@ const timeRangeLabels = {
   week: 'Ultimos 7 dias',
   month: 'Ultimos 30 dias',
   year: 'Temporada atual',
+};
+
+const sortLabels = {
+  wins: 'Vitorias',
+  points: 'Pontos',
+  winRate: 'Taxa de vitoria',
+  matches: 'Partidas',
 };
 
 const avatarPalette = [
@@ -88,8 +98,49 @@ const RankBadge = ({ rank }: { rank: number }) => {
   return <div className="hex-badge !h-10 !w-10 !px-0">{rank}</div>;
 };
 
+const avatarPresets: Record<string, { icon: string; color: string }> = {
+  wood: { icon: '🪵', color: '#8B4513' },
+  brick: { icon: '🧱', color: '#B22222' },
+  sheep: { icon: '🐑', color: '#90EE90' },
+  wheat: { icon: '🌾', color: '#FFD700' },
+  ore: { icon: '🪨', color: '#696969' },
+  desert: { icon: '🏜️', color: '#F4A460' },
+  settlement: { icon: '🏠', color: '#4A90D9' },
+  city: { icon: '🏰', color: '#9B59B6' },
+  road: { icon: '🛤️', color: '#8B4513' },
+  robber: { icon: '🏴', color: '#2C3E50' },
+  dice: { icon: '🎲', color: '#E74C3C' },
+  port: { icon: '⚓', color: '#3498DB' },
+  knight: { icon: '🛡️', color: '#95A5A6' },
+  vp: { icon: '⭐', color: '#F1C40F' },
+  trade: { icon: '⚖️', color: '#1ABC9C' },
+};
+
 const Avatar = ({ entry }: { entry: LeaderboardEntry }) => {
+  const preset = entry.avatarMode === 'preset' && entry.avatarKey ? avatarPresets[entry.avatarKey] : null;
   const initial = entry.nickname.charAt(0).toUpperCase();
+
+  if (entry.avatarUrl) {
+    return (
+      <img
+        src={entry.avatarUrl}
+        alt={`Avatar de ${entry.nickname}`}
+        className="h-12 w-12 rounded-2xl border border-white/35 object-cover"
+      />
+    );
+  }
+
+  if (preset) {
+    return (
+      <div
+        className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/35 text-xl shadow-md"
+        style={{ background: preset.color + '30' }}
+        aria-label={`Avatar de ${entry.nickname}`}
+      >
+        {preset.icon}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -104,17 +155,20 @@ const Avatar = ({ entry }: { entry: LeaderboardEntry }) => {
 
 type Category = 'all' | 'graduacao' | 'pos';
 type TimeRange = 'all' | 'week' | 'month' | 'year';
+type SortBy = 'wins' | 'points' | 'winRate' | 'matches';
 
 export function Leaderboard() {
   const [category, setCategory] = useState<Category>('all');
   const [timeRange, setTimeRange] = useState<TimeRange>('all');
+  const [sortBy, setSortBy] = useState<SortBy>('wins');
 
   const { data: leaderboard, isLoading } = useQuery({
-    queryKey: ['leaderboard', category, timeRange],
+    queryKey: ['leaderboard', category, timeRange, sortBy],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (category !== 'all') params.set('category', category);
       if (timeRange !== 'all') params.set('timeRange', timeRange);
+      params.set('sortBy', sortBy);
 
       const res = await fetch(`/api/v1/leaderboard?${params.toString()}`);
       if (!res.ok) throw new Error('Failed to fetch leaderboard');
@@ -129,12 +183,15 @@ export function Leaderboard() {
     const avgPoints =
       totalPlayers === 0 ? 0 : Math.round((entries.reduce((acc, entry) => acc + entry.totalPoints, 0) / totalPlayers) * 10) / 10;
     const topWins = entries.reduce((acc, entry) => Math.max(acc, entry.wins), 0);
+    const avgWinRate =
+      totalPlayers === 0 ? 0 : Math.round(entries.reduce((acc, entry) => acc + entry.winRate, 0) / totalPlayers);
 
     return {
       totalPlayers,
       totalMatches,
       avgPoints,
       topWins,
+      avgWinRate,
       undergrad: entries.filter((e) => e.category === 'graduacao').length,
       postgrad: entries.filter((e) => e.category === 'pos').length,
     };
@@ -152,7 +209,7 @@ export function Leaderboard() {
             <span className="terrain-chip">Atualizacao em tempo real</span>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 Frente academica
@@ -188,11 +245,29 @@ export function Leaderboard() {
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Ordenar por
+              </label>
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortBy)}>
+                <SelectTrigger className="h-11 rounded-2xl border-border/80 bg-background/80">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-border/80 bg-card">
+                  {Object.entries(sortLabels).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <Card className="catan-panel border-[1.5px]">
           <CardContent className="p-3 sm:p-4">
             <p className="text-xs uppercase tracking-[0.13em] text-muted-foreground">Catanistas</p>
@@ -201,20 +276,26 @@ export function Leaderboard() {
         </Card>
         <Card className="catan-panel border-[1.5px]">
           <CardContent className="p-3 sm:p-4">
+            <p className="text-xs uppercase tracking-[0.13em] text-muted-foreground">Vitorias</p>
+            <p className="mt-1 text-2xl font-bold text-catan-brick">{stats.topWins}</p>
+          </CardContent>
+        </Card>
+        <Card className="catan-panel border-[1.5px]">
+          <CardContent className="p-3 sm:p-4">
+            <p className="text-xs uppercase tracking-[0.13em] text-muted-foreground">Taxa vitoria</p>
+            <p className="mt-1 text-2xl font-bold text-catan-sheep">{stats.avgWinRate}%</p>
+          </CardContent>
+        </Card>
+        <Card className="catan-panel border-[1.5px]">
+          <CardContent className="p-3 sm:p-4">
             <p className="text-xs uppercase tracking-[0.13em] text-muted-foreground">Partidas</p>
-            <p className="mt-1 text-2xl font-bold text-catan-brick">{stats.totalMatches}</p>
+            <p className="mt-1 text-2xl font-bold text-catan-ocean">{stats.totalMatches}</p>
           </CardContent>
         </Card>
         <Card className="catan-panel border-[1.5px]">
           <CardContent className="p-3 sm:p-4">
-            <p className="text-xs uppercase tracking-[0.13em] text-muted-foreground">Media de pontos</p>
-            <p className="mt-1 text-2xl font-bold text-catan-ocean">{stats.avgPoints}</p>
-          </CardContent>
-        </Card>
-        <Card className="catan-panel border-[1.5px]">
-          <CardContent className="p-3 sm:p-4">
-            <p className="text-xs uppercase tracking-[0.13em] text-muted-foreground">Max vitorias</p>
-            <p className="mt-1 text-2xl font-bold text-catan-sheep">{stats.topWins}</p>
+            <p className="text-xs uppercase tracking-[0.13em] text-muted-foreground">Media pts</p>
+            <p className="mt-1 text-2xl font-bold text-catan-wood">{stats.avgPoints}</p>
           </CardContent>
         </Card>
       </div>
@@ -248,12 +329,12 @@ export function Leaderboard() {
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center text-xs">
                     <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
-                      <p className="text-muted-foreground">PTS</p>
-                      <p className="font-bold text-catan-wood">{entry.totalPoints}</p>
-                    </div>
-                    <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
                       <p className="text-muted-foreground">WIN</p>
                       <p className="font-bold text-catan-brick">{entry.wins}</p>
+                    </div>
+                    <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
+                      <p className="text-muted-foreground">PTS</p>
+                      <p className="font-bold text-catan-wood">{entry.totalPoints}</p>
                     </div>
                     <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
                       <p className="text-muted-foreground">MAT</p>
@@ -318,18 +399,22 @@ export function Leaderboard() {
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 text-center text-[11px] sm:flex sm:items-center sm:gap-3 sm:text-xs">
-                      <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
-                        <p className="text-[10px] uppercase tracking-[0.08em] text-muted-foreground">PTS</p>
-                        <p className="text-sm font-bold text-catan-wood">{entry.totalPoints}</p>
-                      </div>
+                    <div className="flex grid-cols-2 gap-2 text-center text-[11px] sm:grid-cols-4 sm:flex sm:items-center sm:gap-3 sm:text-xs">
                       <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
                         <p className="text-[10px] uppercase tracking-[0.08em] text-muted-foreground">WIN</p>
                         <p className="text-sm font-bold text-catan-brick">{entry.wins}</p>
                       </div>
                       <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
+                        <p className="text-[10px] uppercase tracking-[0.08em] text-muted-foreground">PTS</p>
+                        <p className="text-sm font-bold text-catan-wood">{entry.totalPoints}</p>
+                      </div>
+                      <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
                         <p className="text-[10px] uppercase tracking-[0.08em] text-muted-foreground">MAT</p>
                         <p className="text-sm font-bold text-catan-ocean">{entry.matches}</p>
+                      </div>
+                      <div className="rounded-xl bg-secondary/70 px-2 py-1.5">
+                        <p className="text-[10px] uppercase tracking-[0.08em] text-muted-foreground">%</p>
+                        <p className="text-sm font-bold text-catan-sheep">{entry.winRate}%</p>
                       </div>
                     </div>
                   </div>

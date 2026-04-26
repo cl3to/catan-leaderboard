@@ -14,14 +14,17 @@ export class LeaderboardController {
   @ApiOperation({ summary: 'Get leaderboard rankings' })
   @ApiQuery({ name: 'category', required: false, enum: ['graduacao', 'pos', 'all'] })
   @ApiQuery({ name: 'timeRange', required: false, enum: ['week', 'month', 'year', 'all'] })
+  @ApiQuery({ name: 'sortBy', required: false, enum: ['wins', 'points', 'winRate', 'matches'] })
   @ApiResponse({ status: 200, description: 'Leaderboard entries' })
   async getLeaderboard(
     @Query('category') category?: 'graduacao' | 'pos' | 'all',
     @Query('timeRange') timeRange?: 'week' | 'month' | 'year' | 'all',
+    @Query('sortBy') sortBy?: 'wins' | 'points' | 'winRate' | 'matches',
   ) {
     const filters: LeaderboardFilters = {
       category: category || 'all',
       timeRange: timeRange || 'all',
+      sortBy: sortBy || 'wins',
     };
 
     return this.leaderboardService.getLeaderboard(filters);

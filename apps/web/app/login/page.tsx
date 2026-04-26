@@ -1,15 +1,32 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 import { AuthPanel } from '@/components/auth/auth-panel';
 import { Shield, Trophy } from 'lucide-react';
 
 export default function LoginPage() {
   const { status } = useSession();
 
+  if (status === 'loading') {
+    return (
+      <main className="catan-app">
+        <div className="catan-shell grid min-h-[calc(100vh-7rem)] items-center gap-4 py-4 sm:py-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <section className="animate-rise" style={{ animationDelay: '90ms' }}>
+            <div className="catan-panel mx-auto w-full max-w-lg border-[1.5px] bg-card/95 p-10 text-center">
+              <div className="h-9 w-9 animate-pulse rounded-full bg-muted mx-auto" />
+              <p className="mt-4 text-muted-foreground">Carregando...</p>
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
+
   if (status === 'authenticated') {
-    redirect('/');
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
+    return null;
   }
 
   return (

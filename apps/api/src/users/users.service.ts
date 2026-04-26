@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateProfileDto, ChangeAvatarDto } from './dto/user.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -128,12 +129,66 @@ export class UsersService {
 
   async getAvatarPresets() {
     return [
-      { key: 'wood', name: 'Wood', color: '#8B4513' },
-      { key: 'brick', name: 'Brick', color: '#B22222' },
-      { key: 'sheep', name: 'Sheep', color: '#90EE90' },
-      { key: 'wheat', name: 'Wheat', color: '#FFD700' },
-      { key: 'ore', name: 'Ore', color: '#696969' },
-      { key: 'desert', name: 'Desert', color: '#F4A460' },
+      { key: 'wood', name: 'Madeira', category: 'recurso', icon: '🪵', color: '#8B4513' },
+      { key: 'brick', name: 'Tijolo', category: 'recurso', icon: '🧱', color: '#B22222' },
+      { key: 'sheep', name: 'Ovelha', category: 'recurso', icon: '🐑', color: '#90EE90' },
+      { key: 'wheat', name: 'Trigo', category: 'recurso', icon: '🌾', color: '#FFD700' },
+      { key: 'ore', name: 'Pedra', category: 'recurso', icon: '🪨', color: '#696969' },
+      { key: 'settlement', name: 'Aldeia', category: 'construcao', icon: '🏠', color: '#4A90D9' },
+      { key: 'city', name: 'Cidade', category: 'construcao', icon: '🏰', color: '#9B59B6' },
+      { key: 'road', name: 'Estrada', category: 'construcao', icon: '🛤️', color: '#8B4513' },
+      { key: 'desert', name: 'Deserto', category: 'especial', icon: '🏜️', color: '#F4A460' },
+      { key: 'robber', name: 'Ladrao', category: 'especial', icon: '🏴', color: '#2C3E50' },
+      { key: 'dice', name: 'Dado', category: 'especial', icon: '🎲', color: '#E74C3C' },
+      { key: 'port', name: 'Porto', category: 'especial', icon: '⚓', color: '#3498DB' },
+      { key: 'knight', name: 'Cavaleiro', category: 'especial', icon: '🛡️', color: '#95A5A6' },
+      { key: 'vp', name: 'PV', category: 'especial', icon: '⭐', color: '#F1C40F' },
+      { key: 'trade', name: 'Comercio', category: 'especial', icon: '⚖️', color: '#1ABC9C' },
     ];
+  }
+
+  async deleteProfile(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: BigInt(userId) },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.prisma.user.update({
+      where: { id: BigInt(userId) },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+
+    return { message: 'Account deleted successfully' };
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: BigInt(userId) },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    
+    await this.prisma.user.update({
+      where: { id: BigInt(userId) },
+      data: {
+        passwordHash: hashedPassword,
+      },
+    });
+
+    return { message: 'Password changed successfully' };
   }
 }

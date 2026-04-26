@@ -2,11 +2,12 @@ import {
   Controller,
   Get,
   Put,
+  Post,
   Body,
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Post,
+  Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
@@ -40,6 +41,15 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Profile updated', type: ProfileResponseDto })
   async updateMe(@CurrentUser() user: any, @Body() dto: UpdateProfileDto) {
     return this.usersService.updateProfile(user.userId, dto);
+  }
+
+  @Delete('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete my account (soft delete)' })
+  @ApiResponse({ status: 200, description: 'Account deleted' })
+  async deleteMe(@CurrentUser() user: any) {
+    return this.usersService.deleteProfile(user.userId);
   }
 
   @Put('me/avatar/preset')

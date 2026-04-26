@@ -8,14 +8,13 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Security
   app.use(helmet());
+
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
   });
 
-  // Validation
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -23,6 +22,19 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
+  app.use((req: any, res: any, next: any) => {
+    const originalJson = res.json.bind(res);
+    res.json = function (body: any) {
+      const serialized = JSON.parse(
+        JSON.stringify(body, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value
+        )
+      );
+      return originalJson(serialized);
+    };
+    next();
+  });
 
   // Swagger Documentation
   const config = new DocumentBuilder()

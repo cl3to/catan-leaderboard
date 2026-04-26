@@ -259,8 +259,7 @@ export function AuthPanel() {
           variant: 'destructive',
         });
       } else {
-        router.refresh();
-        router.push('/');
+        window.location.href = '/';
       }
     } finally {
       setIsLoading(false);
@@ -288,8 +287,7 @@ export function AuthPanel() {
         redirect: false,
       });
 
-      router.refresh();
-      router.push('/');
+      window.location.href = '/';
     } catch (error: unknown) {
       toast({
         title: 'Erro',

@@ -25,6 +25,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
       // Filter out soft-deleted records by default for supported models only
       if (
+        params.args &&
         softDeleteModels.includes(params.model) &&
         ['findUnique', 'findFirst', 'findMany', 'count', 'aggregate'].includes(params.action)
       ) {

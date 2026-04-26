@@ -61,7 +61,38 @@ export const users = {
       method: 'PUT',
       body: JSON.stringify(data),
     }),
+  deleteMe: () =>
+    apiClient('/users/me', { method: 'DELETE' }),
   getPresets: () => apiClient('/users/avatars/presets'),
+  setAvatarPreset: (avatarKey: string) =>
+    apiClient('/users/me/avatar/preset', {
+      method: 'PUT',
+      body: JSON.stringify({ avatarKey }),
+    }),
+  uploadAvatar: async (file: File) => {
+    const session = await getSession();
+    const formData = new FormData();
+    formData.append('avatar', file);
+    
+    const response = await fetch(`${API_URL}/users/me/avatar/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session?.accessToken}`,
+      },
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to upload avatar');
+    }
+    
+    return response.json();
+  },
+  changePassword: (currentPassword: string, newPassword: string) =>
+    apiClient('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    }),
 };
 
 // Scheduled Matches

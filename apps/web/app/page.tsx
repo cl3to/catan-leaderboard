@@ -35,7 +35,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="rounded-2xl border border-white/30 bg-white/10 px-3 py-2 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/75">Ideia da liga</p>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-white/75">Luta de classes</p>
               <p className="mt-1 flex items-center gap-2 font-semibold text-white">
                 <Shield className="h-4 w-4" /> cooperar para competir
               </p>

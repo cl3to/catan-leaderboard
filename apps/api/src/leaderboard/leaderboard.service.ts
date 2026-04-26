@@ -61,6 +61,7 @@ export class LeaderboardService {
       const totalPoints = user.scoreEvents.reduce((sum, event) => sum + event.pointsDelta, 0);
       const wins = user.scoreEvents.filter((event) => event.isWin).length;
       const matches = user._count.scoreEvents;
+      const winRate = matches > 0 ? Math.round((wins / matches) * 100) : 0;
 
       return {
         userId: user.id.toString(),
@@ -68,18 +69,27 @@ export class LeaderboardService {
         fullName: user.profile?.fullName || '',
         category: user.profile?.category || 'graduacao',
         avatarUrl: user.profile?.avatarUrl || null,
+        avatarKey: user.profile?.avatarKey || null,
+        avatarMode: user.profile?.avatarMode || 'preset',
         totalPoints,
         wins,
         matches,
+        winRate,
       };
     });
 
-    // Sort by total points descending, then by wins
+    const sortBy = filters.sortBy || 'wins';
     leaderboard.sort((a, b) => {
-      if (b.totalPoints !== a.totalPoints) {
-        return b.totalPoints - a.totalPoints;
+      switch (sortBy) {
+        case 'points':
+          return b.totalPoints - a.totalPoints;
+        case 'winRate':
+          return b.winRate - a.winRate;
+        case 'matches':
+          return b.matches - a.matches;
+        default:
+          return b.wins - a.wins;
       }
-      return b.wins - a.wins;
     });
 
     // Add rank

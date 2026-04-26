@@ -3,6 +3,7 @@
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,15 +15,94 @@ import {
 import { User, LogOut, Trophy, Calendar, Swords } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+const avatarPresets: Record<string, { icon: string; color: string }> = {
+  wood: { icon: '🪵', color: '#8B4513' },
+  brick: { icon: '🧱', color: '#B22222' },
+  sheep: { icon: '🐑', color: '#90EE90' },
+  wheat: { icon: '🌾', color: '#FFD700' },
+  ore: { icon: '🪨', color: '#696969' },
+  desert: { icon: '🏜️', color: '#F4A460' },
+  settlement: { icon: '🏠', color: '#4A90D9' },
+  city: { icon: '🏰', color: '#9B59B6' },
+  road: { icon: '🛤️', color: '#8B4513' },
+  robber: { icon: '🏴', color: '#2C3E50' },
+  dice: { icon: '🎲', color: '#E74C3C' },
+  port: { icon: '⚓', color: '#3498DB' },
+  knight: { icon: '🛡️', color: '#95A5A6' },
+  vp: { icon: '⭐', color: '#F1C40F' },
+  trade: { icon: '⚖️', color: '#1ABC9C' },
+};
+
+interface NavbarProfile {
+  nickname: string;
+  avatarMode?: string;
+  avatarKey?: string;
+  avatarUrl?: string;
+  email?: string;
+}
+
 export function Navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
+  const getAuthHeaders = (): HeadersInit => {
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+    if (session?.accessToken) {
+      headers['Authorization'] = `Bearer ${session.accessToken}`;
+    }
+    return headers;
+  };
+
+  const { data: profile } = useQuery<NavbarProfile>({
+    queryKey: ['navbar-profile'],
+    queryFn: async () => {
+      const res = await fetch('/api/v1/users/me', { headers: getAuthHeaders() });
+      if (!res.ok) return null;
+      return res.json();
+    },
+    enabled: status === 'authenticated' && !!session?.accessToken,
+  });
+
   const handleLogout = async () => {
     await signOut({ redirect: false });
     router.push('/');
     router.refresh();
+  };
+
+  const renderAvatar = () => {
+    const avatarMode = profile?.avatarMode;
+    const avatarKey = profile?.avatarKey;
+    const avatarUrl = profile?.avatarUrl;
+    const nickname = session?.user?.nickname || profile?.nickname || '?';
+
+    if (avatarUrl) {
+      return (
+        <img
+          src={avatarUrl}
+          alt="Avatar"
+          className="h-9 w-9 rounded-full object-cover"
+        />
+      );
+    }
+
+    if (avatarMode === 'preset' && avatarKey && avatarPresets[avatarKey]) {
+      const preset = avatarPresets[avatarKey];
+      return (
+        <div
+          className="flex h-9 w-9 items-center justify-center rounded-full text-lg"
+          style={{ background: preset.color + '30' }}
+        >
+          {preset.icon}
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-catan-brick to-catan-wood text-sm font-bold text-white shadow-md">
+        {nickname.charAt(0).toUpperCase()}
+      </div>
+    );
   };
 
   return (
@@ -48,17 +128,15 @@ export function Navbar() {
               ) : session?.user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-border">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-catan-brick to-catan-wood text-sm font-bold text-white shadow-md">
-                        {session.user.nickname?.charAt(0).toUpperCase()}
-                      </div>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full border border-border p-0">
+                      {renderAvatar()}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-60 border-border/70 bg-card" align="end" forceMount>
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
-                        <p className="font-semibold">{session.user.nickname}</p>
-                        <p className="w-[210px] truncate text-sm text-muted-foreground">{session.user.email}</p>
+                        <p className="font-semibold">{profile?.nickname || session.user.nickname}</p>
+                        <p className="w-[210px] truncate text-sm text-muted-foreground">{profile?.email || session.user.email}</p>
                       </div>
                     </div>
                     <DropdownMenuSeparator />
