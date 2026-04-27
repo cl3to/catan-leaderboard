@@ -274,9 +274,16 @@ export class AdminService {
   }
 
   private formatUser(user: any) {
+    const profile = user.profile ?? {};
     return {
       ...user,
       id: user.id.toString(),
+      nickname: profile.nickname || '',
+      fullName: profile.fullName || '',
+      category: profile.category || 'graduacao',
+      avatarMode: profile.avatarMode || 'preset',
+      avatarKey: profile.avatarKey || null,
+      avatarUrl: profile.avatarUrl || null,
       profile: user.profile
         ? {
             ...user.profile,

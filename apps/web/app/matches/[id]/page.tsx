@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, ArrowLeft, Trophy, Users } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { formatSaoPauloDateTime } from '@/lib/time';
 
 interface MatchPlayer {
   id: string;
@@ -68,7 +69,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
     return (
       <main className="catan-app">
         <div className="catan-shell py-10 text-center">
-          <Loader2 className="animate-spin h-8 w-8 mx-auto text-gold" />
+          <Loader2 className="animate-spin h-8 w-8 mx-auto text-social-red" />
         </div>
       </main>
     );
@@ -104,7 +105,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
         <Card className="catan-panel border-border">
           <CardHeader className="space-y-4">
             <CardTitle className="flex items-center gap-2 text-foreground">
-              <Trophy className="h-5 w-5 text-gold" />
+              <Trophy className="h-5 w-5 text-social-red" />
               Resumo
             </CardTitle>
             <CardDescription />
@@ -114,9 +115,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
               <div>
                 <p className="text-muted-foreground">Data</p>
                 <p className="font-medium text-foreground">
-                  {new Date(match.matchDate).toLocaleDateString('pt-BR', {
-                    dateStyle: 'full',
-                  })}
+                  {formatSaoPauloDateTime(match.matchDate)}
                 </p>
               </div>
               <div>
@@ -130,7 +129,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
               <div>
                 <p className="text-muted-foreground">Criada em</p>
                 <p className="font-medium text-foreground">
-                  {new Date(match.createdAt).toLocaleDateString('pt-BR')}
+                  {formatSaoPauloDateTime(match.createdAt)}
                 </p>
               </div>
             </div>
@@ -147,7 +146,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
         <Card className="catan-panel border-border">
           <CardHeader className="space-y-4">
             <CardTitle className="flex items-center gap-2 text-foreground">
-              <Users className="h-5 w-5 text-gold" />
+              <Users className="h-5 w-5 text-social-red" />
               Jogadores ({match.players.length})
             </CardTitle>
           </CardHeader>
@@ -159,7 +158,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
                   className={cn(
                     'flex items-center justify-between rounded-xl border p-4 transition-all',
                     player.isWinner
-                      ? 'border-emerald-500/30 bg-emerald-500/10'
+                      ? 'border-social-red/30 bg-social-red-soft'
                       : 'border-border bg-surface-base/50 hover:bg-surface-base'
                   )}
                 >
@@ -168,7 +167,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
                       className={cn(
                         'flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold',
                         player.isWinner
-                          ? 'bg-emerald-500 text-white'
+                          ? 'bg-social-red text-white'
                           : 'bg-surface-elevated text-muted-foreground'
                       )}
                     >
@@ -184,7 +183,7 @@ export default function MatchDetailsPage({ params }: PageProps) {
                   <div className="text-right">
                     <p className="font-display font-bold text-foreground">{player.victoryPoints} pts</p>
                     {player.isWinner && (
-                      <p className="text-xs text-emerald-400">Vencedor</p>
+                      <p className="text-xs text-social-red">Vencedor</p>
                     )}
                   </div>
                 </div>

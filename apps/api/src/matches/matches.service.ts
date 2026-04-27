@@ -100,8 +100,15 @@ export class MatchesService {
       throw new BadRequestException('One or more players not found');
     }
 
-    // Find winner (placement 1)
-    const winner = dto.players.find((p) => p.placement === 1);
+    const overLimitPlayers = dto.players.filter((p) => p.victoryPoints > 10);
+    if (overLimitPlayers.length > 0) {
+      throw new BadRequestException('No jogador pode ter mais de 10 pontos');
+    }
+
+    const winners = dto.players.filter((p) => p.victoryPoints === 10);
+    if (winners.length !== 1) {
+      throw new BadRequestException('A partida deve ter exatamente um jogador com 10 pontos');
+    }
 
     const match = await this.prisma.matchSubmission.create({
       data: {
@@ -114,7 +121,7 @@ export class MatchesService {
             userId: BigInt(player.userId),
             placement: player.placement,
             victoryPoints: player.victoryPoints,
-            isWinner: player.placement === 1,
+            isWinner: player.victoryPoints === 10,
           })),
         },
       },

@@ -6,8 +6,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,6 +38,36 @@ import {
 import { toast } from '@/components/ui/use-toast';
 import { Calendar as CalendarIcon, Clock, Users, Plus, Flag, Loader2, X, LogOut } from 'lucide-react';
 
+const TIME_ZONE = 'America/Sao_Paulo';
+const SAO_PAULO_OFFSET = '-03:00';
+
+const formatSaoPauloDateTime = (value: string | Date) => {
+  const date = typeof value === 'string' ? new Date(value) : value;
+  return new Intl.DateTimeFormat('pt-BR', {
+    timeZone: TIME_ZONE,
+    dateStyle: 'long',
+    timeStyle: 'short',
+  }).format(date);
+};
+
+const toDatetimeLocalValue = (value: Date) => {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(value);
+
+  const getPart = (type: string) => parts.find((part) => part.type === type)?.value ?? '';
+
+  return `${getPart('year')}-${getPart('month')}-${getPart('day')}T${getPart('hour')}:${getPart('minute')}`;
+};
+
+const saoPauloInputToIso = (value: string) => new Date(`${value}:00${SAO_PAULO_OFFSET}`).toISOString();
+
 interface ScheduledMatch {
   id: string;
   title: string | null;
@@ -70,21 +98,6 @@ const createMatchSchema = z.object({
 });
 
 type CreateMatchValues = z.infer<typeof createMatchSchema>;
-
-const statusStyles: Record<string, { label: string; classes: string }> = {
-  open: {
-    label: 'Aberta',
-    classes: 'border-emerald-500/30 bg-emerald-500/15 text-emerald-400',
-  },
-  cancelled: {
-    label: 'Cancelada',
-    classes: 'border-destructive/40 bg-destructive/15 text-destructive',
-  },
-  complete: {
-    label: 'Completa',
-    classes: 'border-blue-500/30 bg-blue-500/15 text-blue-400',
-  },
-};
 
 export default function CalendarPage() {
   const { data: session, status: sessionStatus } = useSession();
@@ -117,7 +130,7 @@ export default function CalendarPage() {
         headers: getAuthHeaders(),
         body: JSON.stringify({
           title: values.title || null,
-          scheduledDate: new Date(values.scheduledDate).toISOString(),
+          scheduledDate: saoPauloInputToIso(values.scheduledDate),
           minPlayers: values.minPlayers,
           maxPlayers: values.maxPlayers,
         }),
@@ -224,7 +237,7 @@ export default function CalendarPage() {
     resolver: zodResolver(createMatchSchema),
     defaultValues: {
       title: '',
-      scheduledDate: new Date().toISOString().slice(0, 16),
+      scheduledDate: toDatetimeLocalValue(new Date()),
       minPlayers: 3,
       maxPlayers: 4,
     },
@@ -259,6 +272,21 @@ export default function CalendarPage() {
   const isCreator = selectedMatch?.creator.userId === currentUserId;
   const isLoggedIn = sessionStatus === 'authenticated';
 
+  const statusStyles: Record<string, { label: string; classes: string }> = {
+    open: {
+      label: 'Aberta',
+      classes: 'border-social-red/30 bg-social-red-soft/70 text-social-red',
+    },
+    cancelled: {
+      label: 'Cancelada',
+      classes: 'border-destructive/40 bg-destructive/15 text-destructive',
+    },
+    complete: {
+      label: 'Completa',
+      classes: 'border-border bg-surface-base text-muted-foreground',
+    },
+  };
+
   return (
     <main className="catan-app">
       <div className="catan-shell space-y-5 pb-10 pt-3 sm:space-y-6 sm:pt-4">
@@ -278,7 +306,11 @@ export default function CalendarPage() {
           {isLoggedIn && (
             <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
               <DialogTrigger asChild>
-                <Button className="h-10 rounded-full px-5">
+                <Button
+                  variant="outline"
+                  className="h-10 rounded-full border-social-red px-5 text-white shadow-[0_0_18px_hsl(var(--social-red)_/_0.22)] hover:text-white"
+                  style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
+                >
                   <Plus className="mr-1.5 h-4 w-4" />
                   Agendar nova partida
                 </Button>
@@ -437,7 +469,11 @@ export default function CalendarPage() {
               </p>
               <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
                 <DialogTrigger asChild>
-                  <Button className="mt-5 rounded-full px-5">
+                  <Button
+                    variant="outline"
+                    className="mt-5 rounded-full border-social-red px-5 text-white shadow-[0_0_18px_hsl(var(--social-red)_/_0.22)] hover:text-white"
+                    style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
+                  >
                     <Plus className="mr-1.5 h-4 w-4" />
                     Criar primeira partida
                   </Button>
@@ -449,6 +485,9 @@ export default function CalendarPage() {
           <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {matches?.map((match, index) => {
               const status = statusStyles[match.status] ?? statusStyles.complete;
+              const matchIsParticipant = match.players.some(
+                (p) => p.userId === currentUserId || p.nickname === session?.user?.nickname
+              );
               return (
                 <Card
                   key={match.id}
@@ -473,9 +512,7 @@ export default function CalendarPage() {
                     <div className="space-y-1.5 text-sm text-muted-foreground">
                       <p className="inline-flex items-center gap-1.5">
                         <Clock className="h-4 w-4" />
-                        {format(new Date(match.scheduledDate), "dd 'de' MMMM 'às' HH:mm", {
-                          locale: ptBR,
-                        })}
+                        {formatSaoPauloDateTime(match.scheduledDate)}
                       </p>
                       <p className="inline-flex items-center gap-1.5">
                         <Flag className="h-4 w-4" />
@@ -490,7 +527,7 @@ export default function CalendarPage() {
                   <CardContent className="space-y-4 p-4">
                     <div className="rounded-xl bg-surface-base/70 p-3">
                       <p className="inline-flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <Users className="h-4 w-4 text-gold" />
+                        <Users className="h-4 w-4 text-social-red" />
                         {match.currentPlayers} / {match.maxPlayers} jogadores
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
@@ -533,9 +570,12 @@ export default function CalendarPage() {
                       {isLoggedIn &&
                         match.status === 'open' &&
                         match.currentPlayers < match.maxPlayers && (
+                        !matchIsParticipant && (
                           <Button
                             size="sm"
-                            className="h-9 flex-1 rounded-xl"
+                            variant="outline"
+                            className="h-9 flex-1 rounded-xl border-social-red px-4 text-white shadow-[0_0_16px_hsl(var(--social-red)_/_0.18)] hover:text-white"
+                            style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
                             onClick={() => {
                               setSelectedMatch(match);
                               handleJoin();
@@ -544,7 +584,7 @@ export default function CalendarPage() {
                           >
                             Participar
                           </Button>
-                        )}
+                        ))}
                     </div>
                   </CardContent>
                 </Card>
@@ -568,11 +608,7 @@ export default function CalendarPage() {
                     {selectedMatch.title || 'Partida da Liga'}
                   </DialogTitle>
                   <DialogDescription className="text-muted-foreground">
-                    {format(
-                      new Date(selectedMatch.scheduledDate),
-                      "dd 'de' MMMM 'às' HH:mm",
-                      { locale: ptBR }
-                    )}{' '}
+                    {formatSaoPauloDateTime(selectedMatch.scheduledDate)}{' '}
                     - Coordenador: {selectedMatch.creator.nickname}
                   </DialogDescription>
                 </DialogHeader>
@@ -602,7 +638,7 @@ export default function CalendarPage() {
                             className={cn(
                               'inline-flex items-center rounded-full border px-3 py-1 text-sm',
                               player.userId === currentUserId
-                                ? 'border-gold/30 bg-gold/10 text-gold'
+                                ? 'border-social-red/30 bg-social-red-soft text-social-red'
                                 : 'border-border bg-surface-base text-foreground'
                             )}
                           >
@@ -621,7 +657,9 @@ export default function CalendarPage() {
                         selectedMatch.maxPlayers &&
                       !isParticipant && (
                         <Button
-                          className="flex-1"
+                          variant="outline"
+                          className="flex-1 px-4 text-white shadow-[0_0_16px_hsl(var(--social-red)_/_0.18)] hover:text-white"
+                          style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
                           onClick={handleJoin}
                           disabled={joinMutation.isPending}
                         >

@@ -52,6 +52,7 @@ function LoginForm({ onSubmit, isLoading }: { onSubmit: (values: LoginValues) =>
               </FormLabel>
               <FormControl>
                 <Input
+                  autoComplete="username"
                   className="h-12 rounded-xl border-border bg-surface-base text-foreground placeholder:text-muted-foreground"
                   placeholder="catanista@lsc.unicamp.br"
                   {...field}
@@ -72,6 +73,7 @@ function LoginForm({ onSubmit, isLoading }: { onSubmit: (values: LoginValues) =>
               <FormControl>
                 <Input
                   type="password"
+                  autoComplete="current-password"
                   className="h-12 rounded-xl border-border bg-surface-base text-foreground placeholder:text-muted-foreground"
                   placeholder="••••••••"
                   {...field}
@@ -81,7 +83,13 @@ function LoginForm({ onSubmit, isLoading }: { onSubmit: (values: LoginValues) =>
             </FormItem>
           )}
         />
-        <Button type="submit" className="h-12 w-full rounded-xl text-sm font-semibold" disabled={isLoading}>
+        <Button
+          type="submit"
+          variant="outline"
+          className="h-12 w-full rounded-xl border-social-red px-4 text-sm font-semibold text-white hover:text-white"
+          style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
+          disabled={isLoading}
+        >
           {isLoading ? 'Entrando na mesa...' : 'Entrar na Liga'}
         </Button>
       </form>
@@ -133,6 +141,7 @@ function RegisterForm({ onSubmit, isLoading }: { onSubmit: (values: RegisterValu
               <FormControl>
                 <Input
                   type="password"
+                  autoComplete="new-password"
                   className="h-11 rounded-xl border-border bg-surface-base text-foreground placeholder:text-muted-foreground"
                   placeholder="mínimo de 6 caracteres"
                   {...field}
@@ -227,7 +236,13 @@ function RegisterForm({ onSubmit, isLoading }: { onSubmit: (values: RegisterValu
           />
         </div>
 
-        <Button type="submit" className="h-12 w-full rounded-xl text-sm font-semibold" disabled={isLoading}>
+        <Button
+          type="submit"
+          variant="outline"
+          className="h-12 w-full rounded-xl border-social-red px-4 text-sm font-semibold text-white hover:text-white"
+          style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
+          disabled={isLoading}
+        >
           {isLoading ? 'Criando colono...' : 'Criar conta'}
         </Button>
       </form>
@@ -311,13 +326,13 @@ export function AuthPanel() {
           <TabsList className="grid h-12 w-full grid-cols-2 rounded-xl bg-surface-base p-1 border border-border">
             <TabsTrigger
               value="login"
-              className="rounded-lg text-sm font-semibold uppercase tracking-wider data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+              className="rounded-lg text-sm font-semibold uppercase tracking-wider data-[state=active]:bg-social-red-soft data-[state=active]:text-social-red"
             >
               Entrar
             </TabsTrigger>
             <TabsTrigger
               value="register"
-              className="rounded-lg text-sm font-semibold uppercase tracking-wider data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+              className="rounded-lg text-sm font-semibold uppercase tracking-wider data-[state=active]:bg-social-red-soft data-[state=active]:text-social-red"
             >
               Cadastro
             </TabsTrigger>

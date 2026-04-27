@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/components/ui/use-toast';
 import { Users, Swords, Check, X, Search, Loader2 } from 'lucide-react';
+import { formatSaoPauloDateTime } from '@/lib/time';
 
 interface Submission {
   id: string;
@@ -26,12 +27,18 @@ interface Submission {
 }
 
 interface User {
+  id?: string;
   userId: string;
   email: string;
   nickname: string;
   fullName: string;
   category: string;
   isActive: boolean;
+  profile?: {
+    nickname?: string;
+    fullName?: string;
+    category?: string;
+  } | null;
 }
 
 export default function AdminPage() {
@@ -161,7 +168,7 @@ export default function AdminPage() {
     return (
       <main className="catan-app">
         <div className="catan-shell py-10 text-center">
-          <Loader2 className="animate-spin h-8 w-8 mx-auto text-gold" />
+          <Loader2 className="animate-spin h-8 w-8 mx-auto text-social-red" />
         </div>
       </main>
     );
@@ -194,6 +201,11 @@ export default function AdminPage() {
       (u.fullName?.toLowerCase() || '').includes(search.toLowerCase())
   );
 
+  const getUserId = (user: User) => user.userId || user.id || '';
+  const getUserNickname = (user: User) => user.nickname || user.profile?.nickname || '';
+  const getUserFullName = (user: User) => user.fullName || user.profile?.fullName || '';
+  const getUserCategory = (user: User) => user.category || user.profile?.category || '';
+
   return (
     <main className="catan-app">
       <div className="catan-shell space-y-6 py-6">
@@ -213,14 +225,14 @@ export default function AdminPage() {
           <TabsList className="grid w-full grid-cols-2 rounded-xl bg-surface-base p-1 border border-border">
             <TabsTrigger
               value="matches"
-              className="gap-2 rounded-lg data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+              className="gap-2 rounded-lg data-[state=active]:bg-social-red-soft data-[state=active]:text-social-red"
             >
               <Swords className="h-4 w-4" />
               Partidas
             </TabsTrigger>
             <TabsTrigger
               value="players"
-              className="gap-2 rounded-lg data-[state=active]:bg-gold/20 data-[state=active]:text-gold"
+              className="gap-2 rounded-lg data-[state=active]:bg-social-red-soft data-[state=active]:text-social-red"
             >
               <Users className="h-4 w-4" />
               Jogadores
@@ -236,7 +248,7 @@ export default function AdminPage() {
               <CardContent>
                 {loading ? (
                   <div className="flex justify-center py-8">
-                    <Loader2 className="animate-spin h-6 w-6 text-gold" />
+                    <Loader2 className="animate-spin h-6 w-6 text-social-red" />
                   </div>
                 ) : submissions.length === 0 ? (
                   <p className="py-8 text-center text-muted-foreground">Nenhuma partida pendente.</p>
@@ -250,11 +262,11 @@ export default function AdminPage() {
                         <div className="flex items-start justify-between">
                           <div>
                             <p className="font-medium text-foreground">
-                              {new Date(sub.matchDate).toLocaleDateString('pt-BR')}
+                              {formatSaoPauloDateTime(sub.matchDate)}
                             </p>
                             <p className="text-sm text-muted-foreground">{sub.notes || 'Sem observações'}</p>
                             <p className="text-xs text-muted-foreground">
-                              Criada em {new Date(sub.createdAt).toLocaleDateString('pt-BR')}
+                              Criada em {formatSaoPauloDateTime(sub.createdAt)}
                             </p>
                           </div>
                           <div className="flex gap-2">
@@ -312,7 +324,7 @@ export default function AdminPage() {
               <CardContent>
                 {usersLoading ? (
                   <div className="flex justify-center py-8">
-                    <Loader2 className="animate-spin h-6 w-6 text-gold" />
+                    <Loader2 className="animate-spin h-6 w-6 text-social-red" />
                   </div>
                 ) : filteredUsers.length === 0 ? (
                   <p className="py-8 text-center text-muted-foreground">Nenhum jogador encontrado.</p>
@@ -320,21 +332,21 @@ export default function AdminPage() {
                   <div className="space-y-2">
                     {filteredUsers.map((user) => (
                       <div
-                        key={user.userId}
+                        key={getUserId(user)}
                         className="flex items-center justify-between rounded-xl border border-border bg-surface-base/50 p-3"
                       >
                         <div>
-                          <p className="font-medium text-foreground">{user.nickname}</p>
+                          <p className="font-medium text-foreground">{getUserNickname(user) || 'Sem nickname'}</p>
                           <p className="text-sm text-muted-foreground">
-                            {user.fullName} ({user.category})
+                            {getUserFullName(user)} ({getUserCategory(user)})
                           </p>
                           <p className="text-xs text-muted-foreground">{user.email}</p>
                         </div>
                         <Button
                           size="sm"
                           variant={user.isActive ? 'destructive' : 'default'}
-                          onClick={() => handleToggleUser(user.userId, user.isActive)}
-                          disabled={actionLoading === user.userId}
+                          onClick={() => handleToggleUser(getUserId(user), user.isActive)}
+                          disabled={actionLoading === getUserId(user)}
                         >
                           {user.isActive ? 'Desativar' : 'Ativar'}
                         </Button>

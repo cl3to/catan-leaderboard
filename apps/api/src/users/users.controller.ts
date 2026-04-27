@@ -4,6 +4,7 @@ import {
   Put,
   Post,
   Body,
+  Query,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -100,5 +101,14 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'List of presets' })
   async getPresets() {
     return this.usersService.getAvatarPresets();
+  }
+
+  @Get('search')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Search players for match submission' })
+  @ApiResponse({ status: 200, description: 'List of matching players' })
+  async searchUsers(@Query('q') q?: string) {
+    return this.usersService.searchPlayers(q || '');
   }
 }

@@ -147,6 +147,37 @@ export class UsersService {
     ];
   }
 
+  async searchPlayers(query: string) {
+    const normalized = query.trim().toLowerCase();
+
+    const users = await this.prisma.user.findMany({
+      where: {
+        deletedAt: null,
+      },
+      include: {
+        profile: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+      take: 100,
+    });
+
+    return users
+      .map((user) => ({
+        userId: user.id.toString(),
+        email: user.email,
+        nickname: user.profile?.nickname || '',
+        fullName: user.profile?.fullName || '',
+        category: user.profile?.category || 'graduacao',
+      }))
+      .filter((player) => {
+        if (!normalized) return true;
+        const haystack = `${player.nickname} ${player.fullName} ${player.email}`.toLowerCase();
+        return haystack.includes(normalized);
+      });
+  }
+
   async deleteProfile(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: BigInt(userId) },

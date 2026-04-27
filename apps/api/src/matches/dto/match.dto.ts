@@ -16,7 +16,7 @@ class MatchPlayerDto {
   @ApiProperty()
   @IsInt()
   @Min(0)
-  @Max(30)
+  @Max(10)
   victoryPoints: number;
 }
 

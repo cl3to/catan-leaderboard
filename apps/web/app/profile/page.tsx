@@ -93,7 +93,7 @@ export default function ProfilePage() {
     return (
       <main className="catan-app">
         <div className="catan-shell py-10 text-center">
-          <Loader2 className="animate-spin h-8 w-8 mx-auto text-gold" />
+          <Loader2 className="animate-spin h-8 w-8 mx-auto text-social-red" />
         </div>
       </main>
     );
@@ -125,13 +125,13 @@ export default function ProfilePage() {
           <Card className="catan-panel border-border">
             <CardHeader className="space-y-4">
               <CardTitle className="flex items-center gap-2 text-foreground">
-                <User className="h-5 w-5 text-gold" />
+                <User className="h-5 w-5 text-social-red" />
                 Informações
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {profileLoading ? (
-                <Loader2 className="animate-spin h-6 w-6 text-gold" />
+                <Loader2 className="animate-spin h-6 w-6 text-social-red" />
               ) : profile ? (
                 <>
                   <div className="flex items-center gap-4">
@@ -142,17 +142,17 @@ export default function ProfilePage() {
                             <img
                               src={profile.avatarUrl}
                               alt="Avatar"
-                              className="h-16 w-16 rounded-full object-cover border border-gold/30"
+                              className="h-16 w-16 rounded-full object-cover border border-social-red/30"
                             />
                           ) : profile.avatarMode === 'preset' && profile.avatarKey && avatarPresets[profile.avatarKey] ? (
                             <div
-                              className="flex h-16 w-16 items-center justify-center rounded-full text-3xl border border-gold/30"
+                              className="flex h-16 w-16 items-center justify-center rounded-full text-3xl border border-social-red/30"
                               style={{ background: avatarPresets[profile.avatarKey].color + '30' }}
                             >
                               {avatarPresets[profile.avatarKey].icon}
                             </div>
                           ) : (
-                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-gold to-gold-dark text-2xl font-bold text-background transition-transform group-hover:scale-105">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-social-red to-social-red-dark text-2xl font-bold text-white transition-transform group-hover:scale-105">
                               {profile.nickname?.charAt(0).toUpperCase()}
                             </div>
                           )}
@@ -269,7 +269,7 @@ export default function ProfilePage() {
           <Card className="catan-panel border-border">
             <CardHeader className="space-y-4">
               <CardTitle className="flex items-center gap-2 text-foreground">
-                <Trophy className="h-5 w-5 text-gold" />
+                <Trophy className="h-5 w-5 text-social-red" />
                 Estatísticas
               </CardTitle>
               <CardDescription>
@@ -278,27 +278,27 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               {statsLoading ? (
-                <Loader2 className="animate-spin h-6 w-6 text-gold" />
+                <Loader2 className="animate-spin h-6 w-6 text-social-red" />
               ) : stats ? (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
-                    <Trophy className="mx-auto h-6 w-6 text-gold mb-2" />
-                    <p className="text-2xl font-display font-bold text-gold">{stats.rank}º</p>
+                    <Trophy className="mx-auto h-6 w-6 text-social-red mb-2" />
+                    <p className="text-2xl font-display font-bold text-social-red">{stats.rank}º</p>
                     <p className="text-xs text-muted-foreground">Posição</p>
                   </div>
                   <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
-                    <Award className="mx-auto h-6 w-6 text-gold mb-2" />
+                    <Award className="mx-auto h-6 w-6 text-social-red mb-2" />
                     <p className="text-2xl font-display font-bold text-foreground">{stats.totalPoints}</p>
                     <p className="text-xs text-muted-foreground">Pontos</p>
                   </div>
                   <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
-                    <Swords className="mx-auto h-6 w-6 text-gold mb-2" />
+                    <Swords className="mx-auto h-6 w-6 text-social-red mb-2" />
                     <p className="text-2xl font-display font-bold text-foreground">{stats.wins}</p>
                     <p className="text-xs text-muted-foreground">Vitórias</p>
                   </div>
                   <div className="rounded-xl bg-surface-base p-4 text-center border border-border">
-                    <TrendingUp className="mx-auto h-6 w-6 text-emerald-400 mb-2" />
-                    <p className="text-2xl font-display font-bold text-emerald-400">
+                    <TrendingUp className="mx-auto h-6 w-6 text-social-red-dark mb-2" />
+                    <p className="text-2xl font-display font-bold text-social-red-dark">
                       {stats.matches > 0 ? Math.round((stats.wins / stats.matches) * 100) : 0}%
                     </p>
                     <p className="text-xs text-muted-foreground">Taxa Vitória</p>
@@ -314,7 +314,7 @@ export default function ProfilePage() {
             <Card className="catan-panel border-border lg:col-span-2">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-foreground">
-                  <Calendar className="h-5 w-5 text-gold" />
+                  <Calendar className="h-5 w-5 text-social-red" />
                   Desempenho Recente
                 </CardTitle>
               </CardHeader>
@@ -326,7 +326,7 @@ export default function ProfilePage() {
                       className={cn(
                         'flex h-10 w-10 items-center justify-center rounded-lg text-lg font-bold',
                         result === 'W'
-                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                          ? 'bg-social-red-soft text-social-red border border-social-red/30'
                           : 'bg-surface-base text-muted-foreground border border-border'
                       )}
                     >
@@ -410,7 +410,7 @@ function ProfileEditForm({ profile }: { profile: ProfileData }) {
           className="bg-surface-base border-border"
         />
       </div>
-      {message && <p className="text-sm text-emerald-400">{message}</p>}
+      {message && <p className="text-sm text-social-red">{message}</p>}
       <Button type="submit" disabled={saving} className="w-full">
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Salvar'}
       </Button>
@@ -486,7 +486,7 @@ function PasswordChangeForm() {
           className="bg-surface-base border-border"
         />
       </div>
-      {message && <p className="text-sm text-emerald-400">{message}</p>}
+      {message && <p className="text-sm text-social-red">{message}</p>}
       {error && <p className="text-sm text-red-400">{error}</p>}
       <Button type="submit" disabled={saving} className="w-full">
         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Alterar Senha'}

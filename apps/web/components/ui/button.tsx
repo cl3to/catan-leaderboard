@@ -8,13 +8,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-gold to-gold-dark text-background shadow-glow hover:from-gold-light hover:to-gold hover:shadow-glow-lg",
+        default: "bg-gradient-to-r from-social-red to-social-red-dark text-white shadow-[0_0_20px_hsl(var(--social-red)_/_0.24)] hover:from-social-red-dark hover:to-social-red-dark hover:shadow-[0_0_28px_hsl(var(--social-red)_/_0.34)]",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "border border-border bg-transparent hover:bg-surface-elevated hover:text-foreground",
         secondary: "bg-surface-elevated text-foreground border border-border hover:bg-surface-overlay",
         ghost: "hover:bg-surface-elevated hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        gold: "bg-gold/20 text-gold border border-gold/30 hover:bg-gold/30",
+        gold: "bg-social-red-soft text-social-red border border-social-red/30 hover:bg-social-red-soft hover:text-social-red-dark",
       },
       size: {
         default: "h-10 px-4 py-2",

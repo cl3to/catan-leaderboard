@@ -113,7 +113,7 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
           className={cn(
             'rounded-full px-3 py-1.5 text-xs font-semibold transition-all',
             filter === 'all'
-              ? 'bg-gold/20 text-gold border border-gold/30'
+              ? 'bg-social-red-soft text-social-red border border-social-red/30'
               : 'bg-surface-base text-muted-foreground hover:bg-surface-elevated border border-transparent'
           )}
         >
@@ -126,7 +126,7 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
             className={cn(
               'rounded-full px-3 py-1.5 text-xs font-semibold transition-all',
               filter === key
-                ? 'bg-gold/20 text-gold border border-gold/30'
+                ? 'bg-social-red-soft text-social-red border border-social-red/30'
                 : 'bg-surface-base text-muted-foreground hover:bg-surface-elevated border border-transparent'
             )}
           >
@@ -149,8 +149,8 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
                   disabled={presetMutation.isPending}
                   className={cn(
                     'group relative flex flex-col items-center rounded-xl border p-2 transition-all hover:scale-105 hover:shadow-lg',
-                    'border-border/60 hover:border-gold/30 hover:bg-surface-elevated',
-                    selectedKey === preset.key && 'border-gold/50 bg-gold/10'
+                    'border-border/60 hover:border-social-red/30 hover:bg-surface-elevated',
+                    selectedKey === preset.key && 'border-social-red/50 bg-social-red-soft'
                   )}
                 >
                   <div
@@ -163,7 +163,7 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
                     {preset.name}
                   </span>
                   {selectedKey === preset.key && (
-                    <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-background">
+                    <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-social-red text-white">
                       <Check className="h-3 w-3" />
                     </div>
                   )}
@@ -179,7 +179,7 @@ export function AvatarPicker({ onClose, onSelect }: AvatarPickerProps) {
           <button
             onClick={handleUpload}
             disabled={uploading}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-gold/50 hover:bg-gold/5 hover:text-gold disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border py-3 text-sm font-medium text-muted-foreground transition-colors hover:border-social-red/50 hover:bg-social-red-soft/60 hover:text-social-red disabled:opacity-50"
           >
             {uploading ? (
               <>

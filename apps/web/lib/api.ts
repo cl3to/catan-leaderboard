@@ -56,6 +56,10 @@ export const matches = {
 // Users
 export const users = {
   getMe: () => apiClient('/users/me'),
+  searchPlayers: (query?: string) => {
+    const params = query ? `?q=${encodeURIComponent(query)}` : '';
+    return apiClient(`/users/search${params}`);
+  },
   updateMe: (data: unknown) =>
     apiClient('/users/me', {
       method: 'PUT',

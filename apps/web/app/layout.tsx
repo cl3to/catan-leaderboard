@@ -13,6 +13,7 @@ const displayFont = Bree_Serif({
 const bodyFont = Nunito_Sans({
   subsets: ['latin'],
   variable: '--font-body',
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
