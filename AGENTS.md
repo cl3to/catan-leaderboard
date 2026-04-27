@@ -244,6 +244,12 @@ docker compose logs -f db
 ### No Local Development Required
 All development and testing should be done through Docker Compose. No need to install Node.js locally.
 
+### Frontend Conventions
+- Keep the public brand name as `Liga Socialista do Catan`; use `LSC` only where space is tight.
+- The main brand mark is the `☭` emblem used in the Home hero, Navbar, and favicon.
+- Date and time rendering in the web app should use the shared helpers in `apps/web/lib/time.ts` and the `America/Sao_Paulo` timezone.
+- For `datetime-local` inputs, convert values to and from São Paulo local time before sending to the API.
+
 ### Database Seeding
 Demo data is managed in `apps/api/prisma/seed.ts`.
 
