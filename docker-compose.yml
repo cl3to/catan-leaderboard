@@ -20,7 +20,7 @@ services:
 
   migrate:
     build:
-      context: ./apps/api
+      context: ./api
     container_name: catan-migrate
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-catan}:${POSTGRES_PASSWORD:-catan123}@db:5432/${POSTGRES_DB:-catan}
@@ -41,7 +41,7 @@ services:
 
   api:
     build:
-      context: ./apps/api
+      context: ./api
     container_name: catan-api
     environment:
       NODE_ENV: production
@@ -73,7 +73,7 @@ services:
 
   web:
     build:
-      context: ./apps/web
+      context: ./web
     container_name: catan-web
     environment:
       NODE_ENV: production
@@ -84,7 +84,7 @@ services:
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-nextauth-secret-change-this}
     ports:
-      - "3000:3000"
+      - "3030:3000"
     depends_on:
       api:
         condition: service_healthy

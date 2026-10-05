@@ -18,36 +18,34 @@ Full-stack Catan leaderboard application for LSC (Laboratório de Sistemas de Co
 ## Project Structure
 
 ```
-/home/cl3t0/workspace/catan/
-├── apps/
-│   ├── api/                    # NestJS backend
-│   │   ├── src/
-│   │   │   ├── auth/           # JWT authentication
-│   │   │   ├── users/          # User management
-│   │   │   ├── matches/        # Match submissions
-│   │   │   ├── leaderboard/    # Score calculations
-│   │   │   ├── admin/          # Admin operations
-│   │   │   ├── bot/            # Bot API
-│   │   │   ├── scheduled-matches/ # Calendar API
-│   │   │   ├── gateway/        # WebSocket gateway
-│   │   │   ├── prisma/         # Database service
-│   │   │   ├── common/         # Guards, decorators, interceptors
-│   │   │   └── main.ts         # Bootstrap
-│   │   ├── prisma/             # Prisma schema + seed script
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   └── web/                    # Next.js frontend
-│       ├── app/                # App Router
-│       │   ├── api/auth/       # NextAuth handlers
-│       │   ├── page.tsx        # Home/Leaderboard
-│       │   ├── login/page.tsx  # Login page
-│       │   ├── calendar/page.tsx # Scheduled matches page
-│       │   └── ...
-│       ├── components/         # React components
-│       ├── lib/                # Utilities, API client
-│       ├── hooks/              # Custom React hooks
-│       ├── Dockerfile
-│       └── package.json
+/home/cl3t0/workspace/catan-leaderboard/
+├── api/                        # NestJS backend
+│   ├── src/
+│   │   ├── auth/               # JWT authentication
+│   │   ├── users/              # User management
+│   │   ├── matches/            # Match submissions
+│   │   ├── leaderboard/        # Score calculations
+│   │   ├── admin/              # Admin operations
+│   │   ├── bot/                # Bot API
+│   │   ├── scheduled-matches/  # Calendar API
+│   │   ├── gateway/            # WebSocket gateway
+│   │   ├── prisma/             # Database service
+│   │   ├── common/             # Guards, decorators, interceptors
+│   │   └── main.ts             # Bootstrap
+│   ├── prisma/                 # Prisma schema + seed script
+│   ├── Dockerfile
+│   └── package.json
+├── web/                        # Next.js frontend
+│   ├── app/                    # App Router
+│   │   ├── api/auth/           # NextAuth handlers
+│   │   ├── page.tsx            # Home/Leaderboard
+│   │   ├── login/page.tsx      # Login page
+│   │   ├── calendar/page.tsx   # Scheduled matches page
+│   │   └── ...
+│   ├── components/             # React components
+│   ├── lib/                    # Utilities, API client
+│   ├── Dockerfile
+│   └── package.json
 ├── docker-compose.yml
 ├── pnpm-workspace.yaml
 └── turbo.json
@@ -247,11 +245,11 @@ All development and testing should be done through Docker Compose. No need to in
 ### Frontend Conventions
 - Keep the public brand name as `Liga Socialista do Catan`; use `LSC` only where space is tight.
 - The main brand mark is the `☭` emblem used in the Home hero, Navbar, and favicon.
-- Date and time rendering in the web app should use the shared helpers in `apps/web/lib/time.ts` and the `America/Sao_Paulo` timezone.
+- Date and time rendering in the web app should use the shared helpers in `web/lib/time.ts` and the `America/Sao_Paulo` timezone.
 - For `datetime-local` inputs, convert values to and from São Paulo local time before sending to the API.
 
 ### Database Seeding
-Demo data is managed in `apps/api/prisma/seed.ts`.
+Demo data is managed in `api/prisma/seed.ts`.
 
 Seed includes:
 - Admin user (from `.env` values)

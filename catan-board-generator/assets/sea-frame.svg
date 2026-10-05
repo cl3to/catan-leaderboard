@@ -1,0 +1,208 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 866">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f8fc4"/>
+      <stop offset="0.55" stop-color="#1b6ea3"/>
+      <stop offset="1" stop-color="#10578a"/>
+    </linearGradient>
+    <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2e3b8"/>
+      <stop offset="1" stop-color="#e6cf94"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ocean -->
+  <polygon points="250,0 750,0 1000,433 750,866 250,866 0,433" fill="url(#sea)"/>
+
+  <!-- shallow water ring -->
+  <polygon points="282.5,56.3 717.5,56.3 935,433 717.5,809.7 282.5,809.7 65,433" fill="#79c1e0" opacity="0.45"/>
+
+  <!-- waves -->
+  <g stroke="#bfe3f2" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.4">
+    <path d="M88,300 q18,-9 36,0"/>
+    <path d="M88,566 q18,-9 36,0"/>
+    <path d="M876,300 q18,-9 36,0"/>
+    <path d="M876,566 q18,-9 36,0"/>
+    <path d="M382,25 q18,-9 36,0"/>
+    <path d="M582,25 q18,-9 36,0"/>
+    <path d="M382,840 q18,-9 36,0"/>
+    <path d="M582,840 q18,-9 36,0"/>
+    <path d="M23,395 q15,-7 30,0"/>
+    <path d="M23,470 q15,-7 30,0"/>
+    <path d="M947,395 q15,-7 30,0"/>
+    <path d="M947,470 q15,-7 30,0"/>
+  </g>
+
+  <!-- sand island (smaller, so the sea ring is wider) with rounded shore -->
+  <path d="M110.3,387.1 L289.7,115.2 Q320,69.3 375,69.3 L625,69.3 Q680,69.3 710.3,115.2
+           L889.7,387.1 Q920,433 889.7,478.9 L710.3,750.8 Q680,796.7 625,796.7
+           L375,796.7 Q320,796.7 289.7,750.8 L110.3,478.9 Q80,433 110.3,387.1 Z"
+        fill="url(#sand)" stroke="#d9bd82" stroke-width="7" stroke-linejoin="round"/>
+
+  <!-- sand texture -->
+  <g fill="#c9ae74" opacity="0.8">
+    <circle cx="350" cy="160" r="3"/>
+    <circle cx="520" cy="120" r="2.5"/>
+    <circle cx="660" cy="190" r="3"/>
+    <circle cx="280" cy="330" r="2.5"/>
+    <circle cx="720" cy="330" r="3"/>
+    <circle cx="200" cy="520" r="2.5"/>
+    <circle cx="800" cy="520" r="3"/>
+    <circle cx="330" cy="690" r="3"/>
+    <circle cx="620" cy="720" r="2.5"/>
+    <circle cx="500" cy="770" r="2"/>
+  </g>
+  <ellipse cx="450" cy="250" rx="28" ry="14" fill="#dcbd7f" opacity="0.5"/>
+  <ellipse cx="580" cy="620" rx="30" ry="16" fill="#dcbd7f" opacity="0.4"/>
+
+  <!-- jigsaw seams between the 6 interlocking frame pieces: the cuts radiate
+       from the island shore to the six corners of the hexagon, so each piece
+       spans one full edge; the knobs are the puzzle joints -->
+  <g stroke="#0a3f63" stroke-width="2.5" stroke-linecap="round" opacity="0.55" fill="none">
+    <line x1="902" y1="433" x2="1000" y2="433"/>
+    <line x1="701" y1="781" x2="750" y2="866"/>
+    <line x1="299" y1="781" x2="250" y2="866"/>
+    <line x1="98" y1="433" x2="0" y2="433"/>
+    <line x1="299" y1="85" x2="250" y2="0"/>
+    <line x1="701" y1="85" x2="750" y2="0"/>
+  </g>
+  <g fill="#0a3f63" opacity="0.55">
+    <circle cx="951" cy="433" r="5.5"/>
+    <circle cx="725" cy="823" r="5.5"/>
+    <circle cx="275" cy="823" r="5.5"/>
+    <circle cx="49" cy="433" r="5.5"/>
+    <circle cx="275" cy="43" r="5.5"/>
+    <circle cx="725" cy="43" r="5.5"/>
+  </g>
+
+  <!-- harbor piers and trade tokens, placed per frame piece:
+       frame 1 (top): 3:1 in the middle
+       frame 2 (upper-right): 3:1 at the start, 2:1 brick at the end
+       frame 3 (lower-right): 2:1 wood in the middle
+       frame 4 (bottom): 3:1 at the start, 2:1 wheat at the end
+       frame 5 (lower-left): 2:1 stone in the middle
+       frame 6 (upper-left): 3:1 at the start, 2:1 sheep at the end -->
+  <g font-family="Arial, Helvetica, sans-serif" font-weight="bold" text-anchor="middle">
+    <!-- frame 1: 3:1 middle -->
+    <g transform="translate(500,26) rotate(270)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <text y="6" font-size="17" fill="#41341f">3:1</text>
+    </g>
+    <!-- frame 2 start: 3:1 -->
+    <g transform="translate(770,111) rotate(310)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <text y="6" font-size="17" fill="#41341f">3:1</text>
+    </g>
+    <!-- frame 2 end: 2:1 brick -->
+    <g transform="translate(914,360) rotate(350)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <g transform="translate(0,-8)">
+        <rect x="-6.5" y="-5" width="13" height="4.4" fill="#93482c"/>
+        <rect x="-6.5" y="0.6" width="13" height="4.4" fill="#93482c"/>
+      </g>
+      <text y="14" font-size="12" fill="#41341f">2:1</text>
+    </g>
+    <!-- frame 3 middle: 2:1 wood -->
+    <g transform="translate(852,637) rotate(30)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <g transform="translate(0,-8)">
+        <polygon points="0,-10 5.5,-1 -5.5,-1" fill="#2f6b33"/>
+        <rect x="-1.8" y="-1" width="3.6" height="6" fill="#7a4a24"/>
+      </g>
+      <text y="14" font-size="12" fill="#41341f">2:1</text>
+    </g>
+    <!-- frame 4 start: 3:1 -->
+    <g transform="translate(644,828) rotate(70)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <text y="6" font-size="17" fill="#41341f">3:1</text>
+    </g>
+    <!-- frame 4 end: 2:1 wheat -->
+    <g transform="translate(356,828) rotate(110)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <g transform="translate(0,-8)">
+        <g stroke="#c79a1e" stroke-width="1.7">
+          <line x1="-4" y1="7" x2="-4" y2="-3"/>
+          <line x1="0" y1="7" x2="0" y2="-5"/>
+          <line x1="4" y1="7" x2="4" y2="-3"/>
+        </g>
+        <ellipse cx="-4" cy="-5" rx="2" ry="3.2" fill="#d9a92c"/>
+        <ellipse cx="0" cy="-7" rx="2.2" ry="3.6" fill="#d9a92c"/>
+        <ellipse cx="4" cy="-5" rx="2" ry="3.2" fill="#d9a92c"/>
+      </g>
+      <text y="14" font-size="12" fill="#41341f">2:1</text>
+    </g>
+    <!-- frame 5 middle: 2:1 stone -->
+    <g transform="translate(148,637) rotate(150)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <g transform="translate(0,-8)">
+        <polygon points="-7,4 -6,-1 -2.5,-2.5 -1.5,4" fill="#6d7683"/>
+        <polygon points="-2,4 -1,-4.5 3.5,-3.5 4.5,4" fill="#525a66"/>
+        <polygon points="-5.5,-0.5 -3.5,-1.5 -2.5,0.5 -4.5,1" fill="#9aa3ad"/>
+        <polygon points="0,-3.5 2.5,-3 3,-1.5 1,-1" fill="#a8b0ba"/>
+      </g>
+      <text y="14" font-size="12" fill="#41341f">2:1</text>
+    </g>
+    <!-- frame 6 start: 3:1 -->
+    <g transform="translate(86,360) rotate(190)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <text y="6" font-size="17" fill="#41341f">3:1</text>
+    </g>
+    <!-- frame 6 end: 2:1 sheep -->
+    <g transform="translate(230,111) rotate(230)">
+      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
+      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
+      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
+      <g transform="translate(0,-8)">
+        <ellipse cx="-1" cy="1" rx="6.5" ry="4.5" fill="#f7f4ec" stroke="#b9b2a0" stroke-width="0.8"/>
+        <circle cx="4.5" cy="-2" r="2.2" fill="#3d3d3d"/>
+      </g>
+      <text y="14" font-size="12" fill="#41341f">2:1</text>
+    </g>
+  </g>
+
+  <!-- frame piece numbers (assembly reference, clockwise 1-6, one per edge
+       piece): piece 1 attaches to 2, 2 to 3 ... 6 to 1 -->
+  <g font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">
+    <g fill="#f2e3bd" stroke="#6b4f2a" stroke-width="2">
+      <circle cx="356" cy="38" r="11"/>
+      <circle cx="846" cy="233" r="11"/>
+      <circle cx="914" cy="506" r="11"/>
+      <circle cx="500" cy="833" r="11"/>
+      <circle cx="230" cy="755" r="11"/>
+      <circle cx="154" cy="233" r="11"/>
+    </g>
+    <g fill="#41341f">
+      <text x="356" y="42">1</text>
+      <text x="846" y="237">2</text>
+      <text x="914" y="510">3</text>
+      <text x="500" y="837">4</text>
+      <text x="230" y="759">5</text>
+      <text x="154" y="237">6</text>
+    </g>
+  </g>
+</svg>

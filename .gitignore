@@ -8,8 +8,8 @@ backups/
 uploads/
 
 # Next.js
-apps/web/.next/
-apps/web/tsconfig.tsbuildinfo
+web/.next/
+web/tsconfig.tsbuildinfo
 *.tsbuildinfo
 
 # Logs

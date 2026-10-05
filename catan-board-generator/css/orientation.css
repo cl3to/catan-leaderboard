@@ -1,0 +1,42 @@
+/* Landscape: square board fills the right side of the screen and the header
+ * takes the remaining width. Portrait: header stacks above the board. */
+
+@media all and (orientation: landscape) {
+  #board {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100vh;
+    height: 100vh;
+  }
+
+  #title {
+    position: relative;
+    left: 0;
+    width: calc(100vw - 100vh);
+    min-height: 35%;
+  }
+
+  .hex {
+    font-size: 4.5vh;
+  }
+}
+
+@media all and (orientation: portrait) {
+  #board {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 100vw;
+  }
+
+  #title {
+    position: relative;
+    min-height: 15%;
+  }
+
+  .hex {
+    font-size: 4.5vw;
+  }
+}

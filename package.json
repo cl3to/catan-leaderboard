@@ -4,7 +4,8 @@
   "private": true,
   "description": "LSC Catan Leaderboard - NestJS + Next.js + TypeScript",
   "workspaces": [
-    "apps/*",
+    "api",
+    "web",
     "packages/*"
   ],
   "scripts": {

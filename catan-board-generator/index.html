@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catan Board Generator - Settlers of Catan Map Builder</title>
+    <meta name="description"
+        content="Board generator for Settlers of Catan, classic game and 5-6 player expansion. Shuffle fair boards that follow your house rules.">
+
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/map-select.css">
+    <link rel="stylesheet" href="css/orientation.css">
+</head>
+
+<body class="theme-classic">
+
+    <header class="newTitle" id="title">
+        <h1><span>The Better</span><br>
+            <span>Catan Board</span><br>
+            <span>Generator</span>
+        </h1>
+        <nav class="myNav">
+            <ul>
+                <li class="myLi"><a class="links" href="#">Feedback</a></li>
+                <li class="myLi"><a class="links" href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <section id="top_content">
+            <section id="map-select">
+                <div class="map-select-menu-row-center">
+                    <span class="map-button selected-map-button">Classic</span>
+                    <a class="map-links" href="expansion.html"><span
+                            class="map-button available-map-button">Expansion</span></a>
+                </div>
+            </section>
+            <div class="description">
+                <p>Board generator for Settlers of Catan, for the classic game and the 5&ndash;6 player expansion. Use
+                    the generation options to build boards that follow your house rules.</p>
+            </div>
+            <section id="inline-options">
+                <button id="btnOps" type="button">Options</button>
+                <button id="shuffleButton" type="button">Shuffle</button>
+            </section>
+        </section>
+    </header>
+
+    <section class="board" id="board"></section>
+    <div id="overlay" class="hidden"></div>
+    <section id="popmenu" class="hidden">
+
+        <h2>Custom Generation Rules</h2><br>
+        <div class="settingswrap">
+            <input id="selected-map" type="hidden" value="normal" />
+            <div class="menu-row">
+                <label class="mylabel" for="image_option_input">Image Style</label>
+                <select id="image_option_input">
+                    <option value="colorblock">Colorblock</option>
+                    <option value="classic" selected>Classic</option>
+                </select>
+            </div>
+            <div class="menu-row">
+                <label class="mylabel" for="adjacent_6_8_input">6 &amp; 8 Can Touch</label>
+                <input id="adjacent_6_8_input" type="checkbox">
+            </div>
+            <div class="menu-row">
+                <label class="mylabel" for="adjacent_2_12_input">2 &amp; 12 Can Touch</label>
+                <input id="adjacent_2_12_input" type="checkbox" checked>
+            </div>
+            <div class="menu-row">
+                <label class="mylabel" for="adjacent_same_numbers_input">Same Numbers Can Touch</label>
+                <input id="adjacent_same_numbers_input" type="checkbox" checked>
+            </div>
+            <div class="menu-row">
+                <label class="mylabel" for="adjacent_strong_points_input">Strong Combos Can Share a Point</label>
+                <input id="adjacent_strong_points_input" type="checkbox">
+            </div>
+            <div id="sameResourceSetting" class="menu-row">
+                <label class="mylabel" for="adjacent_same_resource_input">Same Resource Can Touch</label>
+                <input id="adjacent_same_resource_input" type="checkbox" checked>
+            </div>
+            <button type="button" class="menuclosebutton">Close Options</button>
+        </div>
+
+    </section>
+
+    <script src="js/engine.js"></script>
+    <script src="js/board.js"></script>
+</body>
+
+</html>

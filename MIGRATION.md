@@ -42,26 +42,25 @@ This repository has been successfully migrated from a single-file Express.js bac
 
 ```
 catan/
-├── apps/
-│   ├── api/              # NestJS backend (port 4000)
-│   │   ├── src/
-│   │   │   ├── auth/     # Authentication module
-│   │   │   ├── users/    # User management
-│   │   │   ├── matches/  # Match submissions
-│   │   │   ├── leaderboard/
-│   │   │   ├── admin/    # Admin operations
-│   │   │   ├── bot/      # Bot API
-│   │   │   ├── scheduled-matches/
-│   │   │   ├── uploads/  # File upload handling
-│   │   │   ├── prisma/   # Database service
-│   │   │   ├── gateway/  # WebSocket gateway
-│   │   │   └── common/   # Guards, decorators
-│   │   └── Dockerfile
-│   └── web/              # Next.js frontend (port 3000)
-│       ├── app/          # App Router
-│       ├── components/   # React components
-│       ├── lib/          # Utilities
-│       └── Dockerfile
+├── api/                  # NestJS backend (port 4000)
+│   ├── src/
+│   │   ├── auth/         # Authentication module
+│   │   ├── users/        # User management
+│   │   ├── matches/      # Match submissions
+│   │   ├── leaderboard/
+│   │   ├── admin/        # Admin operations
+│   │   ├── bot/          # Bot API
+│   │   ├── scheduled-matches/
+│   │   ├── uploads/      # File upload handling
+│   │   ├── prisma/       # Database service
+│   │   ├── gateway/      # WebSocket gateway
+│   │   └── common/       # Guards, decorators
+│   └── Dockerfile
+├── web/                  # Next.js frontend (port 3000)
+│   ├── app/              # App Router
+│   ├── components/       # React components
+│   ├── lib/              # Utilities
+│   └── Dockerfile
 ├── packages/
 │   ├── database/         # Prisma schema & client
 │   └── types/            # Shared TypeScript types

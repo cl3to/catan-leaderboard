@@ -1,0 +1,278 @@
+/* Base layout, tiles, number chits, themes and the options popup.
+ * Original stylesheet written for this clone. */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: #fffaed;
+}
+
+.newTitle {
+  text-align: center;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 10px 0 0;
+}
+
+h2 {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 8px 0 0;
+}
+
+.myNav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.myLi {
+  display: inline;
+  margin: 0 4px;
+}
+
+.links {
+  font-size: 18px;
+  text-decoration: none;
+  color: #1c5d7a;
+}
+
+.links:hover {
+  text-decoration: underline;
+}
+
+.description {
+  margin: 0 15px;
+}
+
+#inline-options {
+  margin-top: 10px;
+  width: 100%;
+}
+
+#btnOps {
+  width: 45%;
+  font-size: 20px;
+  padding: 4px 0;
+}
+
+#shuffleButton {
+  width: 25%;
+  font-size: 20px;
+  margin: 0 5%;
+  padding: 4px 0;
+}
+
+/* ---- board ---- */
+
+/* Sea frame behind the classic board (flat-top hexagon, harbor ports included). */
+.board-frame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 99%;
+  height: 85.8%;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background: url("../assets/sea-frame.svg") center / 100% 100% no-repeat;
+}
+
+.hex {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #ead49c;
+  color: #2f2b23;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.hex-normal {
+  height: 17.5%;
+  width: calc(17.5% * 0.866);
+}
+
+.hex-expanded {
+  height: 16%;
+  width: calc(16% * 0.866);
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* Beach ring and terrain hex inset inside each tile cell: the sandy cell
+ * base shows around every tile, with a darker beach ring at its edge, so
+ * tiles read as separate pieces on the island like a physical set. */
+.tile-beach {
+  position: absolute;
+  inset: 2.5%;
+  background: #c9ac72;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.tile-hex {
+  position: absolute;
+  inset: 4.5%;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.tile-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tile-art svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tile-circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: calc(40% * 0.866);
+  background: #e3c586;
+  border: 1px solid #1c1c1c;
+  border-radius: 50%;
+}
+
+.hex-expanded .tile-circle {
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.tile-circle.desert-chit {
+  background: transparent;
+  border-color: transparent;
+}
+
+.chit-num {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  font-family: 'Teko', sans-serif;
+  font-weight: 700;
+  font-size: 1.18em;
+  line-height: 1;
+  color: inherit;
+}
+
+.chit-dots {
+  position: absolute;
+  left: 50%;
+  top: 74%;
+  transform: translate(-50%, -50%);
+  font-family: 'Teko', sans-serif;
+  font-size: 0.62em;
+  letter-spacing: -0.5px;
+  color: inherit;
+}
+
+.high-prob {
+  color: #c62d2d;
+}
+
+/* ---- tile themes ---- */
+
+/* Classic theme renders the SVG art inside the inset terrain hex; the beach
+ * ring and sand margin around it come from the tile cell layers. */
+.theme-classic .tile-art {
+  display: block;
+}
+
+/* Custom user-supplied PNGs render full-bleed inside the terrain hex. */
+.tile-art.custom {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.theme-colorblock .tile-art {
+  display: none;
+}
+
+.theme-colorblock .wood .tile-hex   { background: #3f8f42; }
+.theme-colorblock .sheep .tile-hex  { background: #a5c86a; }
+.theme-colorblock .wheat .tile-hex  { background: #ecc441; }
+.theme-colorblock .brick .tile-hex  { background: #b95c39; }
+.theme-colorblock .ore .tile-hex    { background: #9aa3ad; }
+.theme-colorblock .desert .tile-hex { background: #ecd39f; }
+
+/* ---- options popup ---- */
+
+.hidden {
+  display: none;
+}
+
+.setting-hidden {
+  visibility: hidden;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+#popmenu {
+  width: min(440px, 92vw);
+  min-height: 350px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 15.5%;
+  background: #e3c586;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px 0 #000;
+  z-index: 100;
+  text-align: center;
+  font-size: 1.2rem;
+  box-sizing: border-box;
+  padding: 18px 22px 16px;
+}
+
+.settingswrap {
+  position: relative;
+  width: 100%;
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  height: 44px;
+}
+
+.mylabel {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.menu-row select {
+  max-width: 60%;
+}
+
+input[type="checkbox"] {
+  margin: 0;
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+.menuclosebutton {
+  display: block;
+  width: 80%;
+  height: 40px;
+  margin: 14px auto 0;
+  font-size: 20px;
+}
