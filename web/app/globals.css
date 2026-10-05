@@ -616,6 +616,51 @@
     container-type: inline-size;
   }
 
+  /* Fullscreen board card: center the board and use the viewport height. */
+  .gen-board-card:fullscreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: hsl(var(--surface-base));
+    padding: 1.25rem;
+    overflow: hidden;
+  }
+
+  .gen-board-viewport {
+    position: relative;
+  }
+
+  /* In fullscreen the viewport captures gestures (pinch, drag, wheel). */
+  .gen-board-card:fullscreen .gen-board-viewport {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+  }
+
+  .gen-board-card:fullscreen .gen-board-viewport:active {
+    cursor: grabbing;
+  }
+
+  .gen-board-card:fullscreen .gen-board {
+    width: auto;
+    max-width: none;
+    height: min(100%, calc(100vw - 2.5rem));
+  }
+
+  .gen-zoom-controls {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 10;
+  }
+
   /* Sea frame behind the classic board (harbor ports included). */
   .gen-frame {
     position: absolute;
@@ -677,8 +722,8 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 40%;
-    height: calc(40% * 0.866);
+    width: 47%;
+    height: calc(47% * 0.866);
     background: #e9cd92;
     border: 1px solid hsl(28 30% 25% / 0.85);
     border-radius: 50%;
@@ -713,10 +758,10 @@
     letter-spacing: -0.5px;
   }
 
-  .gen-hex-normal .gen-chit-num { font-size: 5.2cqi; }
-  .gen-hex-normal .gen-chit-dots { font-size: 2.8cqi; }
-  .gen-hex-expanded .gen-chit-num { font-size: 4.8cqi; }
-  .gen-hex-expanded .gen-chit-dots { font-size: 2.6cqi; }
+  .gen-hex-normal .gen-chit-num { font-size: 4.4cqi; }
+  .gen-hex-normal .gen-chit-dots { font-size: 2.4cqi; }
+  .gen-hex-expanded .gen-chit-num { font-size: 4cqi; }
+  .gen-hex-expanded .gen-chit-dots { font-size: 2.2cqi; }
 
   .gen-high-prob {
     color: #c62d2d;
@@ -730,6 +775,32 @@
   .gen-theme-colorblock .brick .gen-tile-hex  { background: #b95c39; }
   .gen-theme-colorblock .ore .gen-tile-hex    { background: #9aa3ad; }
   .gen-theme-colorblock .desert .gen-tile-hex { background: #ecd39f; }
+
+  /* Original theme renders scans of the original game tiles. */
+  .gen-tile-img {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+
+  .gen-theme-original .gen-tile-beach,
+  .gen-theme-original .gen-tile-hex { display: none; }
+
+  .gen-theme-original .gen-tile-img { display: block; }
+  .gen-theme-original .wood .gen-tile-img   { background-image: url('/assets/catan-tiles/wood.png'); }
+  .gen-theme-original .sheep .gen-tile-img  { background-image: url('/assets/catan-tiles/sheep.png'); }
+  .gen-theme-original .wheat .gen-tile-img  { background-image: url('/assets/catan-tiles/wheat.png'); }
+  .gen-theme-original .brick .gen-tile-img  { background-image: url('/assets/catan-tiles/brick.png'); }
+  .gen-theme-original .ore .gen-tile-img    { background-image: url('/assets/catan-tiles/ore.png'); }
+  .gen-theme-original .desert .gen-tile-img { background-image: url('/assets/catan-tiles/desert.png'); }
+
+  /* Original sea frame with the harbor ports from the physical game. */
+  .gen-theme-original .gen-frame {
+    background: url('/assets/catan-tiles/sea-frame.png') center / 100% 100% no-repeat;
+  }
 }
 
 @layer utilities {

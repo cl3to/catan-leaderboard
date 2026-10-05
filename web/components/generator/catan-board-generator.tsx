@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Dices } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Dices, Maximize2, Minus, Plus, RotateCcw, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -82,7 +82,24 @@ const ART: Record<string, string> = {
 };
 
 type MapMode = 'classic' | 'expansion';
-type ArtTheme = 'classic' | 'colorblock';
+type ArtTheme = 'classic' | 'colorblock' | 'original';
+type Point = { x: number; y: number };
+
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 4;
+
+const clampZoom = (zoom: number) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
+
+// Keeps the panned board from drifting away: the board may move only as
+// far as its scaled-overhang allows, so its edges never leave the viewport.
+const clampPan = (pan: Point, viewport: DOMRect, zoom: number): Point => {
+  const maxX = (viewport.width * (zoom - 1)) / 2;
+  const maxY = (viewport.height * (zoom - 1)) / 2;
+  return {
+    x: Math.min(maxX, Math.max(-maxX, pan.x)),
+    y: Math.min(maxY, Math.max(-maxY, pan.y)),
+  };
+};
 
 function OptionToggle({
   label,
@@ -121,7 +138,7 @@ function OptionToggle({
 
 export function CatanBoardGenerator() {
   const [mapMode, setMapMode] = useState<MapMode>('classic');
-  const [artTheme, setArtTheme] = useState<ArtTheme>('classic');
+  const [artTheme, setArtTheme] = useState<ArtTheme>('original');
   const [options, setOptions] = useState<GenerationOptions>({
     allow68: false,
     allow212: true,
@@ -130,6 +147,112 @@ export function CatanBoardGenerator() {
     allowStrongPoints: false,
   });
   const [tiles, setTiles] = useState<Tile[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState<Point>({ x: 0, y: 0 });
+  const boardCardRef = useRef<HTMLElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const zoomRef = useRef(1);
+  const gestureRef = useRef<{ pointers: Map<number, Point>; lastDist: number }>({
+    pointers: new Map(),
+    lastDist: 0,
+  });
+
+  useEffect(() => {
+    zoomRef.current = zoom;
+  }, [zoom]);
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      const active = document.fullscreenElement === boardCardRef.current;
+      setIsFullscreen(active);
+      if (!active) {
+        zoomRef.current = 1;
+        setZoom(1);
+        setPan({ x: 0, y: 0 });
+      }
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
+  }, []);
+
+  const applyZoom = useCallback((next: number) => {
+    const clamped = clampZoom(next);
+    zoomRef.current = clamped;
+    setZoom(clamped);
+    const viewport = viewportRef.current?.getBoundingClientRect();
+    if (viewport) setPan((prev) => clampPan(prev, viewport, clamped));
+  }, []);
+
+  const resetZoom = useCallback(() => {
+    zoomRef.current = 1;
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  }, []);
+
+  // Wheel zoom (desktop) — needs a non-passive listener to block scrolling.
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+    const onWheel = (event: WheelEvent) => {
+      if (!document.fullscreenElement) return;
+      event.preventDefault();
+      applyZoom(zoomRef.current * Math.exp(-event.deltaY * 0.0015));
+    };
+    viewport.addEventListener('wheel', onWheel, { passive: false });
+    return () => viewport.removeEventListener('wheel', onWheel);
+  }, [applyZoom]);
+
+  const onViewportPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!isFullscreen || (event.target as Element).closest('button')) return;
+    // Blocks text selection while panning/zooming (dragging would otherwise
+    // highlight the chit numbers behind the gesture).
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    gestureRef.current.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    const points = Array.from(gestureRef.current.pointers.values());
+    gestureRef.current.lastDist =
+      points.length >= 2 ? Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y) : 0;
+  };
+
+  const onViewportPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const gesture = gestureRef.current;
+    if (!isFullscreen || !gesture.pointers.has(event.pointerId)) return;
+    const previous = gesture.pointers.get(event.pointerId)!;
+    gesture.pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    const viewport = viewportRef.current?.getBoundingClientRect();
+    if (!viewport) return;
+
+    if (gesture.pointers.size >= 2) {
+      // Pinch zoom: scale tracks the change in distance between fingers.
+      const points = Array.from(gesture.pointers.values());
+      const dist = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+      if (gesture.lastDist > 0 && dist > 0) {
+        applyZoom(zoomRef.current * (dist / gesture.lastDist));
+        gesture.lastDist = dist;
+      }
+    } else if (zoomRef.current > 1) {
+      // Single finger (or mouse drag) pans once zoomed in.
+      setPan((prev) =>
+        clampPan({ x: prev.x + (event.clientX - previous.x), y: prev.y + (event.clientY - previous.y) }, viewport, zoomRef.current)
+      );
+    }
+  };
+
+  const onViewportPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    gestureRef.current.pointers.delete(event.pointerId);
+    const points = Array.from(gestureRef.current.pointers.values());
+    gestureRef.current.lastDist =
+      points.length >= 2 ? Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y) : 0;
+  };
+
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) {
+      void document.exitFullscreen();
+    } else {
+      void boardCardRef.current?.requestFullscreen();
+    }
+  }, []);
 
   const cfg = mapMode === 'expansion' ? EXPANSION : CLASSIC;
   const positions = useMemo(() => computePositions(cfg), [cfg]);
@@ -198,6 +321,13 @@ export function CatanBoardGenerator() {
               >
                 Cores
               </button>
+              <button
+                type="button"
+                className={cn('seg-btn flex-1 justify-center', artTheme === 'original' && 'seg-btn-active')}
+                onClick={() => setArtTheme('original')}
+              >
+                Clássico
+              </button>
             </div>
           </div>
 
@@ -248,13 +378,46 @@ export function CatanBoardGenerator() {
         </div>
       </section>
 
-      <section className="catan-panel animate-slide-up overflow-hidden p-4 sm:p-6">
-        <div
-          className={cn(
-            'gen-board mx-auto w-full max-w-[640px]',
-            artTheme === 'colorblock' ? 'gen-theme-colorblock' : 'gen-theme-classic'
-          )}
+      <section
+        ref={boardCardRef}
+        className="catan-panel gen-board-card animate-slide-up overflow-hidden p-4 sm:p-6"
+      >
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          className="absolute right-4 top-4 z-10 h-9 gap-1.5 px-3"
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? 'Sair da tela cheia' : 'Ver tabuleiro em tela cheia'}
         >
+          {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          <span className="hidden sm:inline">{isFullscreen ? 'Sair' : 'Tela cheia'}</span>
+        </Button>
+        <div
+          ref={viewportRef}
+          className={cn('gen-board-viewport', isFullscreen && 'gen-board-viewport-full')}
+          onPointerDown={onViewportPointerDown}
+          onPointerMove={onViewportPointerMove}
+          onPointerUp={onViewportPointerUp}
+          onPointerCancel={onViewportPointerUp}
+          onDoubleClick={() => {
+            if (isFullscreen) resetZoom();
+          }}
+          onContextMenu={(event) => {
+            if (isFullscreen) event.preventDefault();
+          }}
+        >
+          <div
+            className={cn(
+              'gen-board mx-auto w-full max-w-[640px]',
+              artTheme === 'colorblock'
+                ? 'gen-theme-colorblock'
+                : artTheme === 'original'
+                  ? 'gen-theme-original'
+                  : 'gen-theme-classic'
+            )}
+            style={isFullscreen ? { transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` } : undefined}
+          >
           {cfg.hasFrame && <div className="gen-frame" />}
           {positions.map((pos, index) => {
             const tile = tiles[index];
@@ -275,6 +438,7 @@ export function CatanBoardGenerator() {
                 <div className="gen-tile-hex">
                   <div className="gen-tile-art" dangerouslySetInnerHTML={{ __html: ART[tile.resource] }} />
                 </div>
+                <div className="gen-tile-img" />
                 {tile.resource === 'desert' ? (
                   <div className="gen-tile-circle gen-desert-chit" />
                 ) : (
@@ -286,6 +450,42 @@ export function CatanBoardGenerator() {
               </div>
             );
           })}
+          </div>
+          {isFullscreen && (
+            <div className="gen-zoom-controls">
+              <Button
+                type="button"
+                variant="secondary"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => applyZoom(zoomRef.current / 1.3)}
+                aria-label="Reduzir zoom"
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="h-9 gap-1 px-3 tabular-nums"
+                onClick={resetZoom}
+                aria-label="Restaurar zoom"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                {Math.round(zoom * 100)}%
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => applyZoom(zoomRef.current * 1.3)}
+                aria-label="Aumentar zoom"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </section>
     </div>
