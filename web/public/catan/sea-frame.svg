@@ -33,111 +33,90 @@
     <path d="M947,470 q15,-7 30,0"/>
   </g>
 
-  <!-- sand island (smaller, so the sea ring is wider) with rounded shore -->
-  <path d="M110.3,387.1 L289.7,115.2 Q320,69.3 375,69.3 L625,69.3 Q680,69.3 710.3,115.2
-           L889.7,387.1 Q920,433 889.7,478.9 L710.3,750.8 Q680,796.7 625,796.7
-           L375,796.7 Q320,796.7 289.7,750.8 L110.3,478.9 Q80,433 110.3,387.1 Z"
-        fill="url(#sand)" stroke="#d9bd82" stroke-width="7" stroke-linejoin="round"/>
+  <!-- sand island: the shore follows the outline of the resource tiles at a
+       uniform thin margin, with rounded capes and small bays -->
+  <path d="M 357.5,71.2 L 434.0,115.4 L 424.9,110.1 L 490.9,71.3 Q 499.9,66.0 509.0,71.2 L 585.5,115.4 L 576.4,110.1 L 642.4,71.3 Q 651.4,66.0 660.5,71.2 L 737.0,115.4 Q 746.0,120.6 746.0,131.0 L 746.0,219.3 L 746.0,208.5 L 812.3,244.0 Q 821.8,249.1 821.8,259.9 L 821.8,348.2 L 821.8,337.4 L 888.1,373.0 Q 897.5,378.1 897.5,388.8 L 897.5,477.2 Q 897.5,487.6 888.5,492.7 L 812.0,536.9 L 821.1,531.7 L 821.8,605.9 Q 821.9,616.4 812.8,621.7 L 736.3,665.8 L 745.4,660.6 L 746.0,734.9 Q 746.1,745.4 737.0,750.6 L 660.5,794.8 Q 651.5,800.0 642.5,794.8 L 566.0,750.6 L 575.1,755.9 L 509.1,794.7 Q 500.1,800.0 491.0,794.8 L 414.5,750.6 L 423.6,755.9 L 357.6,794.7 Q 348.6,800.0 339.5,794.8 L 263.0,750.6 Q 254.0,745.4 254.0,735.0 L 254.0,646.7 L 254.0,657.5 L 187.7,622.0 Q 178.2,616.9 178.2,606.1 L 178.2,517.8 L 178.2,528.6 L 111.9,493.0 Q 102.5,487.9 102.5,477.2 L 102.5,388.8 Q 102.5,378.4 111.5,373.3 L 188.0,329.1 L 178.9,334.3 L 178.2,260.1 Q 178.1,249.6 187.2,244.3 L 263.7,200.2 L 254.6,205.4 L 254.0,131.1 Q 253.9,120.6 263.0,115.4 L 339.5,71.2 Q 348.5,66.0 357.5,71.2 Z" fill="url(#sand)" stroke="#d9bd82" stroke-width="6" stroke-linejoin="round"/>
 
-  <!-- sand texture -->
-  <g fill="#c9ae74" opacity="0.8">
-    <circle cx="350" cy="160" r="3"/>
-    <circle cx="520" cy="120" r="2.5"/>
-    <circle cx="660" cy="190" r="3"/>
-    <circle cx="280" cy="330" r="2.5"/>
-    <circle cx="720" cy="330" r="3"/>
-    <circle cx="200" cy="520" r="2.5"/>
-    <circle cx="800" cy="520" r="3"/>
-    <circle cx="330" cy="690" r="3"/>
-    <circle cx="620" cy="720" r="2.5"/>
-    <circle cx="500" cy="770" r="2"/>
-  </g>
-  <ellipse cx="450" cy="250" rx="28" ry="14" fill="#dcbd7f" opacity="0.5"/>
-  <ellipse cx="580" cy="620" rx="30" ry="16" fill="#dcbd7f" opacity="0.4"/>
-
-  <!-- jigsaw seams between the 6 interlocking frame pieces: the cuts radiate
-       from the island shore to the six corners of the hexagon, so each piece
-       spans one full edge; the knobs are the puzzle joints -->
-  <g stroke="#0a3f63" stroke-width="2.5" stroke-linecap="round" opacity="0.55" fill="none">
-    <line x1="902" y1="433" x2="1000" y2="433"/>
-    <line x1="701" y1="781" x2="750" y2="866"/>
-    <line x1="299" y1="781" x2="250" y2="866"/>
-    <line x1="98" y1="433" x2="0" y2="433"/>
-    <line x1="299" y1="85" x2="250" y2="0"/>
-    <line x1="701" y1="85" x2="750" y2="0"/>
-  </g>
-  <g fill="#0a3f63" opacity="0.55">
-    <circle cx="951" cy="433" r="5.5"/>
-    <circle cx="725" cy="823" r="5.5"/>
-    <circle cx="275" cy="823" r="5.5"/>
-    <circle cx="49" cy="433" r="5.5"/>
-    <circle cx="275" cy="43" r="5.5"/>
-    <circle cx="725" cy="43" r="5.5"/>
-  </g>
-
-  <!-- harbor piers and trade tokens, placed per frame piece:
-       frame 1 (top): 3:1 in the middle
-       frame 2 (upper-right): 3:1 at the start, 2:1 brick at the end
-       frame 3 (lower-right): 2:1 wood in the middle
-       frame 4 (bottom): 3:1 at the start, 2:1 wheat at the end
-       frame 5 (lower-left): 2:1 stone in the middle
-       frame 6 (upper-left): 3:1 at the start, 2:1 sheep at the end -->
-  <g font-family="Arial, Helvetica, sans-serif" font-weight="bold" text-anchor="middle">
-    <!-- frame 1: 3:1 middle -->
-    <g transform="translate(500,26) rotate(270)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <text y="6" font-size="17" fill="#41341f">3:1</text>
+  <!-- harbour piers run from the beach out to the trading tokens, matching
+       the positions of the original board frame -->
+  <g>
+    <g>
+      <polygon points="444.9,116.5 434.6,122.5 411.7,83.8 422.1,77.7" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="436.2" y1="101.7" x2="425.9" y2="107.8"/>
+        <line x1="429.4" y1="90.1" x2="419" y2="96.2"/>
+      </g>
+      <polygon points="482.8,94.1 472.5,100.2 449.6,61.4 460,55.4" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="474.1" y1="79.4" x2="463.8" y2="85.5"/>
+        <line x1="467.3" y1="67.8" x2="456.9" y2="73.9"/>
+      </g>
+      <circle cx="436" cy="69" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <text x="436" y="75.5" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="19" text-anchor="middle" fill="#41341f">3:1</text>
     </g>
-    <!-- frame 2 start: 3:1 -->
-    <g transform="translate(770,111) rotate(310)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <text y="6" font-size="17" fill="#41341f">3:1</text>
+    <g>
+      <polygon points="687.6,105.3 677.2,99.3 699.7,60.3 710.1,66.3" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="696.1" y1="90.5" x2="685.7" y2="84.5"/>
+        <line x1="702.9" y1="78.8" x2="692.5" y2="72.8"/>
+      </g>
+      <polygon points="725.7,127.3 715.3,121.3 737.8,82.3 748.2,88.3" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="734.2" y1="112.5" x2="723.8" y2="106.5"/>
+        <line x1="741" y1="100.8" x2="730.6" y2="94.8"/>
+      </g>
+      <circle cx="727" cy="69" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <text x="727" y="75.5" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="19" text-anchor="middle" fill="#41341f">3:1</text>
     </g>
-    <!-- frame 2 end: 2:1 brick -->
-    <g transform="translate(914,360) rotate(350)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <g transform="translate(0,-8)">
+    <g>
+      <polygon points="805.8,273 805.8,261 850.8,261 850.8,273" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="822.9" y1="273" x2="822.9" y2="261"/>
+        <line x1="836.4" y1="273" x2="836.4" y2="261"/>
+      </g>
+      <polygon points="805.8,317 805.8,305 850.8,305 850.8,317" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="822.9" y1="317" x2="822.9" y2="305"/>
+        <line x1="836.4" y1="317" x2="836.4" y2="305"/>
+      </g>
+      <circle cx="867" cy="289" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <g transform="translate(867,280) scale(2.2)">
         <rect x="-6.5" y="-5" width="13" height="4.4" fill="#93482c"/>
         <rect x="-6.5" y="0.6" width="13" height="4.4" fill="#93482c"/>
       </g>
-      <text y="14" font-size="12" fill="#41341f">2:1</text>
+      <text x="867" y="304" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="14" text-anchor="middle" fill="#41341f">2:1</text>
     </g>
-    <!-- frame 3 middle: 2:1 wood -->
-    <g transform="translate(852,637) rotate(30)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <g transform="translate(0,-8)">
+    <g>
+      <polygon points="805.6,549 805.5,537 850.5,536.6 850.6,548.6" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="822.7" y1="548.8" x2="822.6" y2="536.8"/>
+        <line x1="836.2" y1="548.7" x2="836.1" y2="536.7"/>
+      </g>
+      <polygon points="806,593 805.9,581 850.9,580.6 851,592.6" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="823.1" y1="592.8" x2="823" y2="580.8"/>
+        <line x1="836.6" y1="592.7" x2="836.5" y2="580.7"/>
+      </g>
+      <circle cx="851" cy="565" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <g transform="translate(851,561.5) scale(2.2)">
         <polygon points="0,-10 5.5,-1 -5.5,-1" fill="#2f6b33"/>
         <rect x="-1.8" y="-1" width="3.6" height="6" fill="#7a4a24"/>
       </g>
-      <text y="14" font-size="12" fill="#41341f">2:1</text>
+      <text x="851" y="580" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="14" text-anchor="middle" fill="#41341f">2:1</text>
     </g>
-    <!-- frame 4 start: 3:1 -->
-    <g transform="translate(644,828) rotate(70)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <text y="6" font-size="17" fill="#41341f">3:1</text>
-    </g>
-    <!-- frame 4 end: 2:1 wheat -->
-    <g transform="translate(356,828) rotate(110)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <g transform="translate(0,-8)">
+    <g>
+      <polygon points="469.7,764 480.1,770 457.6,809 447.2,803" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="461.2" y1="778.8" x2="471.5" y2="784.8"/>
+        <line x1="454.4" y1="790.5" x2="464.8" y2="796.5"/>
+      </g>
+      <polygon points="431.6,742 442,748 419.5,787 409.1,781" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="423" y1="756.8" x2="433.4" y2="762.8"/>
+        <line x1="416.3" y1="768.5" x2="426.7" y2="774.5"/>
+      </g>
+      <circle cx="427" cy="806" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <g transform="translate(427,800.2) scale(1.8)">
         <g stroke="#c79a1e" stroke-width="1.7">
           <line x1="-4" y1="7" x2="-4" y2="-3"/>
           <line x1="0" y1="7" x2="0" y2="-5"/>
@@ -147,62 +126,73 @@
         <ellipse cx="0" cy="-7" rx="2.2" ry="3.6" fill="#d9a92c"/>
         <ellipse cx="4" cy="-5" rx="2" ry="3.2" fill="#d9a92c"/>
       </g>
-      <text y="14" font-size="12" fill="#41341f">2:1</text>
+      <text x="427" y="821" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="14" text-anchor="middle" fill="#41341f">2:1</text>
     </g>
-    <!-- frame 5 middle: 2:1 stone -->
-    <g transform="translate(148,637) rotate(150)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <g transform="translate(0,-8)">
+    <g>
+      <polygon points="689.8,759.4 700.2,753.4 722.7,792.4 712.3,798.4" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="698.4" y1="774.2" x2="708.8" y2="768.2"/>
+        <line x1="705.1" y1="785.9" x2="715.5" y2="779.9"/>
+      </g>
+      <polygon points="651.7,781.4 662.1,775.4 684.6,814.4 674.2,820.4" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="660.3" y1="796.2" x2="670.7" y2="790.2"/>
+        <line x1="667" y1="807.9" x2="677.4" y2="801.9"/>
+      </g>
+      <circle cx="700" cy="809" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <text x="700" y="815.5" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="19" text-anchor="middle" fill="#41341f">3:1</text>
+    </g>
+    <g>
+      <polygon points="240.5,633.4 251.1,639.1 229.8,678.7 219.3,673.1" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="232.5" y1="648.5" x2="243" y2="654.2"/>
+        <line x1="226.1" y1="660.4" x2="236.7" y2="666"/>
+      </g>
+      <polygon points="201.8,612.6 212.3,618.3 191.1,657.9 180.5,652.3" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="193.7" y1="627.7" x2="204.3" y2="633.4"/>
+        <line x1="187.3" y1="639.6" x2="197.9" y2="645.3"/>
+      </g>
+      <circle cx="198" cy="675" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <g transform="translate(200.8,666.5) scale(2.2)">
         <polygon points="-7,4 -6,-1 -2.5,-2.5 -1.5,4" fill="#6d7683"/>
         <polygon points="-2,4 -1,-4.5 3.5,-3.5 4.5,4" fill="#525a66"/>
         <polygon points="-5.5,-0.5 -3.5,-1.5 -2.5,0.5 -4.5,1" fill="#9aa3ad"/>
         <polygon points="0,-3.5 2.5,-3 3,-1.5 1,-1" fill="#a8b0ba"/>
       </g>
-      <text y="14" font-size="12" fill="#41341f">2:1</text>
+      <text x="198" y="690" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="14" text-anchor="middle" fill="#41341f">2:1</text>
     </g>
-    <!-- frame 6 start: 3:1 -->
-    <g transform="translate(86,360) rotate(190)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <text y="6" font-size="17" fill="#41341f">3:1</text>
+    <g>
+      <polygon points="118.5,458 118.5,470 73.5,470 73.5,458" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="101.4" y1="458" x2="101.4" y2="470"/>
+        <line x1="87.9" y1="458" x2="87.9" y2="470"/>
+      </g>
+      <polygon points="118.5,414 118.5,426 73.5,426 73.5,414" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="101.4" y1="414" x2="101.4" y2="426"/>
+        <line x1="87.9" y1="414" x2="87.9" y2="426"/>
+      </g>
+      <circle cx="64" cy="442" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <text x="64" y="448.5" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="19" text-anchor="middle" fill="#41341f">3:1</text>
     </g>
-    <!-- frame 6 end: 2:1 sheep -->
-    <g transform="translate(230,111) rotate(230)">
-      <rect x="-28" y="-10" width="56" height="20" rx="4" fill="#b5824a" stroke="#7d562e" stroke-width="2"/>
-      <line x1="-14" y1="-10" x2="-14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <line x1="14" y1="-10" x2="14" y2="10" stroke="#7d562e" stroke-width="2"/>
-      <circle r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="3"/>
-      <g transform="translate(0,-8)">
+    <g>
+      <polygon points="210.2,249.5 199.8,255.5 177.3,216.6 187.7,210.6" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="201.6" y1="234.7" x2="191.2" y2="240.7"/>
+        <line x1="194.9" y1="223" x2="184.5" y2="229"/>
+      </g>
+      <polygon points="248.3,227.6 237.9,233.5 215.4,194.6 225.8,188.6" fill="#b5824a" stroke="#7d562e" stroke-width="2" stroke-linejoin="round"/>
+      <g stroke="#7d562e" stroke-width="1.3" opacity="0.85">
+        <line x1="239.7" y1="212.7" x2="229.3" y2="218.7"/>
+        <line x1="233" y1="201" x2="222.6" y2="207"/>
+      </g>
+      <circle cx="196" cy="193" r="25" fill="#f2e3bd" stroke="#6b4f2a" stroke-width="4"/>
+      <g transform="translate(196.9,182.6) scale(2.2)">
         <ellipse cx="-1" cy="1" rx="6.5" ry="4.5" fill="#f7f4ec" stroke="#b9b2a0" stroke-width="0.8"/>
         <circle cx="4.5" cy="-2" r="2.2" fill="#3d3d3d"/>
       </g>
-      <text y="14" font-size="12" fill="#41341f">2:1</text>
-    </g>
-  </g>
-
-  <!-- frame piece numbers (assembly reference, clockwise 1-6, one per edge
-       piece): piece 1 attaches to 2, 2 to 3 ... 6 to 1 -->
-  <g font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">
-    <g fill="#f2e3bd" stroke="#6b4f2a" stroke-width="2">
-      <circle cx="356" cy="38" r="11"/>
-      <circle cx="846" cy="233" r="11"/>
-      <circle cx="914" cy="506" r="11"/>
-      <circle cx="500" cy="833" r="11"/>
-      <circle cx="230" cy="755" r="11"/>
-      <circle cx="154" cy="233" r="11"/>
-    </g>
-    <g fill="#41341f">
-      <text x="356" y="42">1</text>
-      <text x="846" y="237">2</text>
-      <text x="914" y="510">3</text>
-      <text x="500" y="837">4</text>
-      <text x="230" y="759">5</text>
-      <text x="154" y="237">6</text>
+      <text x="196" y="208" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="14" text-anchor="middle" fill="#41341f">2:1</text>
     </g>
   </g>
 </svg>

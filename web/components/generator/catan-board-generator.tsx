@@ -16,69 +16,212 @@ import {
 } from '@/lib/catan-engine';
 
 // Hand-drawn SVG art for the "Classic" theme (one original motif per terrain).
+
+// One wheat ear: stem, layered grain, awns and leaves.
+const WHEAT_EAR = `<g>
+  <line x1="0" y1="0" x2="0" y2="-42" stroke="#b98f1d" stroke-width="2"/>
+  <g fill="#d9a92c">
+    <ellipse cx="0" cy="-45" rx="2.6" ry="5"/>
+    <ellipse cx="-3.6" cy="-39" rx="2.4" ry="4.4" transform="rotate(-26 -3.6 -39)"/>
+    <ellipse cx="3.6" cy="-39" rx="2.4" ry="4.4" transform="rotate(26 3.6 -39)"/>
+    <ellipse cx="-3.4" cy="-32" rx="2.2" ry="4" transform="rotate(-24 -3.4 -32)"/>
+    <ellipse cx="3.4" cy="-32" rx="2.2" ry="4" transform="rotate(24 3.4 -32)"/>
+  </g>
+  <g stroke="#c9a626" stroke-width="1">
+    <line x1="0" y1="-48" x2="-4" y2="-59"/>
+    <line x1="0" y1="-48" x2="4" y2="-59"/>
+    <line x1="0" y1="-48" x2="0" y2="-61"/>
+  </g>
+  <path d="M0,-10 Q-8,-16 -10,-26" stroke="#a8871c" stroke-width="2" fill="none"/>
+  <path d="M0,-6 Q8,-12 10,-22" stroke="#a8871c" stroke-width="2" fill="none"/>
+</g>`;
+
+// Bundled sheaf of stalks with grain heads poking out.
+const WHEAT_SHEAF = `<g>
+  <path d="M-10,0 L-6.5,-20 L6.5,-20 L10,0 Z" fill="#d9a92c"/>
+  <g stroke="#b98f1d" stroke-width="1.4">
+    <line x1="-5" y1="-2" x2="-3.8" y2="-18"/>
+    <line x1="0" y1="-2" x2="0" y2="-19"/>
+    <line x1="5" y1="-2" x2="3.8" y2="-18"/>
+  </g>
+  <rect x="-7" y="-11" width="14" height="3.6" rx="1" fill="#b98f1d"/>
+  <g fill="#d9a92c">
+    <ellipse cx="-4.5" cy="-22.5" rx="2.2" ry="3.8"/>
+    <ellipse cx="0" cy="-23.5" rx="2.2" ry="3.8"/>
+    <ellipse cx="4.5" cy="-22.5" rx="2.2" ry="3.8"/>
+  </g>
+</g>`;
+
+// Golden field with ears around the edges and sheaves at the front; the
+// middle stays sparse so the number chit stays readable on top of it.
+const WHEAT_ART = `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
+  <rect width="100" height="115" fill="#eac83e"/>
+  <g fill="#dcb62e" opacity="0.5">
+    <rect x="0" width="12" height="115"/>
+    <rect x="26" width="12" height="115"/>
+    <rect x="52" width="12" height="115"/>
+    <rect x="78" width="12" height="115"/>
+  </g>
+  <path d="M0,96 Q25,90 50,96 T100,96 L100,115 L0,115 Z" fill="#d4ad28"/>
+  <path d="M0,107 Q25,102 50,107 T100,107 L100,115 L0,115 Z" fill="#c49c22"/>
+  ${[[50, 36, 0.62, 0], [19, 44, 0.78, -8], [81, 44, 0.78, 8], [9, 80, 1, 0], [91, 80, 1, 0], [5, 58, 0.95, 0], [95, 58, 0.95, 0], [40, 115, 0.5, 0], [60, 115, 0.5, 0]]
+    .map(([x, y, s, r]) => `<g transform="translate(${x},${y}) rotate(${r}) scale(${s})">${WHEAT_EAR}</g>`)
+    .join('')}
+  <g transform="translate(24,111)">${WHEAT_SHEAF}</g>
+  <g transform="translate(76,111)">${WHEAT_SHEAF}</g>
+</svg>`;
+
+// Pine: trunk plus three shaded tiers of needles.
+const WOOD_PINE = `<g>
+  <rect x="-2.2" y="-6" width="4.4" height="8" rx="1.2" fill="#7a4a24"/>
+  <polygon points="0,-24 13,-6 -13,-6" fill="#2f6b33"/>
+  <polygon points="0,-24 13,-6 4,-6" fill="#397a3b"/>
+  <polygon points="0,-33 9.5,-17 -9.5,-17" fill="#357a39"/>
+  <polygon points="0,-33 9.5,-17 3,-17" fill="#3d8442"/>
+  <polygon points="0,-40 6,-29 -6,-29" fill="#3d8442"/>
+  <polygon points="0,-40 6,-29 2,-29" fill="#4a9149"/>
+</g>`;
+
+// Round deciduous tree: trunk under a clustered canopy with a highlight.
+const WOOD_BUSH = `<g>
+  <rect x="-2" y="-6" width="4" height="8" rx="1" fill="#7a4a24"/>
+  <circle cx="0" cy="-16" r="9" fill="#3d8442"/>
+  <circle cx="-7.5" cy="-11" r="6.5" fill="#357a39"/>
+  <circle cx="7.5" cy="-11" r="6.5" fill="#357a39"/>
+  <circle cx="0" cy="-22" r="6.5" fill="#468d45"/>
+  <circle cx="-3" cy="-15" r="4" fill="#55a057"/>
+</g>`;
+
+// Dense forest: layered groves in the background, pines and round trees
+// around the tile with a grass clearing at the front.
+const WOOD_ART = `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
+  <rect width="100" height="115" fill="#86b25c"/>
+  <ellipse cx="50" cy="26" rx="56" ry="26" fill="#6fa052" opacity="0.55"/>
+  <ellipse cx="16" cy="56" rx="44" ry="18" fill="#74a655" opacity="0.5"/>
+  <ellipse cx="84" cy="56" rx="44" ry="18" fill="#74a655" opacity="0.5"/>
+  <path d="M0,92 Q25,86 50,92 T100,92 L100,115 L0,115 Z" fill="#a8c47a"/>
+  <path d="M0,104 Q25,99 50,104 T100,104 L100,115 L0,115 Z" fill="#97b468"/>
+  ${[[15, 90, 1], [37, 97, 0.72], [63, 97, 0.78], [85, 90, 1], [33, 46, 0.62], [67, 46, 0.62], [50, 32, 0.55]]
+    .map(([x, y, s]) => `<g transform="translate(${x},${y}) scale(${s})">${WOOD_PINE}</g>`)
+    .join('')}
+  ${[[8, 66, 0.85], [92, 66, 0.85], [50, 112, 0.9]]
+    .map(([x, y, s]) => `<g transform="translate(${x},${y}) scale(${s})">${WOOD_BUSH}</g>`)
+    .join('')}
+</svg>`;
+
+// Ewe: fluffy wool body built from circles, dark head with ear, legs, tail.
+const SHEEP_EWE = `<g>
+  <rect x="-6.5" y="-2" width="2.6" height="7" rx="1" fill="#4a4a4a"/>
+  <rect x="3.9" y="-2" width="2.6" height="7" rx="1" fill="#4a4a4a"/>
+  <circle cx="0" cy="-11" r="9.5" fill="#f7f4ec"/>
+  <circle cx="-7" cy="-7" r="6.5" fill="#f7f4ec"/>
+  <circle cx="7" cy="-7" r="6.5" fill="#f7f4ec"/>
+  <circle cx="-4" cy="-16" r="5.5" fill="#f7f4ec"/>
+  <circle cx="4" cy="-16" r="5.5" fill="#f7f4ec"/>
+  <circle cx="-10.5" cy="-13" r="3.2" fill="#f7f4ec"/>
+  <circle cx="11.5" cy="-9" r="4.6" fill="#3d3d3d"/>
+  <polygon points="12.5,-13 17.5,-17 15.5,-8.5" fill="#3d3d3d"/>
+</g>`;
+
+// Small tuft of grass blades.
+const SHEEP_TUFT = `<g stroke="#7fa052" stroke-width="1.6" fill="none" stroke-linecap="round">
+  <line x1="0" y1="0" x2="-3" y2="-6"/>
+  <line x1="0" y1="0" x2="0" y2="-7.5"/>
+  <line x1="0" y1="0" x2="3" y2="-6"/>
+</g>`;
+
+// Pasture: scattered grazing sheep (some mirrored) and grass tufts.
+const SHEEP_ART = `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
+  <rect width="100" height="115" fill="#a5c86a"/>
+  <path d="M0,100 Q25,94 50,100 T100,100 L100,115 L0,115 Z" fill="#98bc5c"/>
+  ${[[45, 96, 1], [55, 101, 0.8], [15, 82, 1.1], [85, 82, 1], [36, 28, 0.9], [64, 30, 0.8], [27, 50, 0.9], [73, 52, 0.85]]
+    .map(([x, y, s]) => `<g transform="translate(${x},${y}) scale(${s})">${SHEEP_TUFT}</g>`)
+    .join('')}
+  ${[[22, 106, 1, 1], [78, 106, 1, -1], [9, 62, 0.72, 1], [91, 62, 0.72, -1], [50, 36, 0.6, 1]]
+    .map(([x, y, s, m]) => `<g transform="translate(${x},${y}) scale(${m * s},${s})">${SHEEP_EWE}</g>`)
+    .join('')}
+</svg>`;
+
+// Brick tones cycled per brick so the wall reads as hand-laid clay.
+const BRICK_FILLS = ['#b95c39', '#c06a45', '#ab4f30', '#b25335', '#a3462b'];
+const BRICK_ART = `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
+  <rect width="100" height="115" fill="#8a3f26"/>
+  ${Array.from({ length: 9 }, (_, r) => {
+    const y = 2.5 + r * 12.4;
+    const off = r % 2 ? 10.5 : 0;
+    return Array.from({ length: 6 }, (_, i) => {
+      const x = off - 10.5 + i * 21;
+      const fill = BRICK_FILLS[(r * 3 + i) % BRICK_FILLS.length];
+      return `<rect x="${x}" y="${y}" width="19" height="10.4" rx="1" fill="${fill}" stroke="#7d3620" stroke-width="0.8"/>`;
+    }).join('');
+  }).join('')}
+  <rect width="100" height="115" fill="#f2e3bd" opacity="0.08"/>
+</svg>`;
+
+// Mountain: faceted slopes with a snow cap.
+const ORE_PEAK = `<g>
+  <polygon points="-30,0 0,-48 30,0" fill="#6d7683"/>
+  <polygon points="0,-48 30,0 6,0" fill="#7d8794"/>
+  <polygon points="-30,0 0,-48 -5,0" fill="#5d6572"/>
+  <polygon points="0,-48 8,-35 -8,-35" fill="#edf1f4"/>
+  <polygon points="0,-48 4,-40 -4,-40" fill="#f7fafc"/>
+</g>`;
+
+// Scree boulder cluster at the mountain foot.
+const ORE_ROCK = `<g>
+  <polygon points="-8,3 -5,-4 2,-6 8,-1 7,3" fill="#7d8794"/>
+  <polygon points="-5,-4 2,-6 1,3 -4,3" fill="#8d96a1"/>
+</g>`;
+
+// Range: faceted peaks around the tile with scree at the front.
+const ORE_ART = `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
+  <rect width="100" height="115" fill="#9aa3ad"/>
+  <rect width="100" height="38" fill="#b3bac3" opacity="0.55"/>
+  ${[[22, 88, 0.95, 1], [78, 88, 0.85, -1], [50, 115, 0.5, 1], [50, 48, 0.55, -1]]
+    .map(([x, y, s, m]) => `<g transform="translate(${x},${y}) scale(${m * s},${s})">${ORE_PEAK}</g>`)
+    .join('')}
+  ${[[12, 108, 1], [88, 108, 1], [33, 112, 0.65], [67, 112, 0.65]]
+    .map(([x, y, s]) => `<g transform="translate(${x},${y}) scale(${s})">${ORE_ROCK}</g>`)
+    .join('')}
+</svg>`;
+
+// Gnarled dead tree with bare branches.
+const DESERT_TREE = `<g stroke="#8a6f43" fill="none" stroke-linecap="round">
+  <path d="M0,0 L0,-14" stroke-width="3.2"/>
+  <path d="M0,-8 L-7,-16" stroke-width="2.2"/>
+  <path d="M0,-11 L6,-19" stroke-width="2.2"/>
+  <path d="M-4,-12 L-10,-14" stroke-width="1.6"/>
+  <path d="M3,-15 L9,-23" stroke-width="1.6"/>
+</g>`;
+
+// Weathered rock cluster.
+const DESERT_ROCK = `<g>
+  <polygon points="-7,2 -4,-4 3,-5 8,0 6,2" fill="#b0a78f"/>
+  <polygon points="-4,-4 3,-5 2,1 -3,1" fill="#c2b99c"/>
+</g>`;
+
+// Barren dunes: layered ridges with light crests, dead trees and rocks.
+const DESERT_ART = `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
+  <rect width="100" height="115" fill="#ecd39f"/>
+  <rect width="100" height="30" fill="#f2e0b4" opacity="0.55"/>
+  <path d="M0,58 C20,48 40,58 55,52 C75,44 90,55 100,50 L100,115 L0,115 Z" fill="#e3c58c"/>
+  <path d="M0,58 C20,48 40,58 55,52 C75,44 90,55 100,50" stroke="#f2e0b4" stroke-width="2.2" fill="none"/>
+  <path d="M0,78 C25,70 45,80 65,74 C82,69 95,78 100,74 L100,115 L0,115 Z" fill="#d9b97e"/>
+  <path d="M0,78 C25,70 45,80 65,74 C82,69 95,78 100,74" stroke="#e8cd97" stroke-width="2" fill="none"/>
+  <path d="M0,96 Q25,90 50,96 T100,96 L100,115 L0,115 Z" fill="#cfa96e"/>
+  <g transform="translate(24,58)">${DESERT_TREE}</g>
+  <g transform="translate(80,63) scale(-0.85,0.85)">${DESERT_TREE}</g>
+  <g transform="translate(12,44)">${DESERT_ROCK}</g>
+  <g transform="translate(88,88)">${DESERT_ROCK}</g>
+</svg>`;
+
 const ART: Record<string, string> = {
-  wood: `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
-    <rect width="100" height="115" fill="#5b9e48"/>
-    <polygon points="30,88 42,58 54,88" fill="#2f6b33"/>
-    <polygon points="16,66 26,42 36,66" fill="#2f6b33"/>
-    <polygon points="62,70 73,44 84,70" fill="#2f6b33"/>
-    <polygon points="40,55 47,40 54,55" fill="#357a39"/>
-    <rect x="33" y="88" width="5" height="9" fill="#7a4a24"/>
-    <rect x="23" y="66" width="4" height="8" fill="#7a4a24"/>
-    <rect x="71" y="70" width="4" height="8" fill="#7a4a24"/>
-  </svg>`,
-  sheep: `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
-    <rect width="100" height="115" fill="#a5c86a"/>
-    <ellipse cx="34" cy="62" rx="17" ry="12" fill="#f7f4ec"/>
-    <circle cx="49" cy="58" r="6" fill="#3d3d3d"/>
-    <ellipse cx="66" cy="86" rx="15" ry="11" fill="#f7f4ec"/>
-    <circle cx="79" cy="82" r="5.5" fill="#3d3d3d"/>
-    <ellipse cx="30" cy="92" rx="13" ry="9" fill="#f7f4ec"/>
-    <circle cx="42" cy="89" r="4.5" fill="#3d3d3d"/>
-  </svg>`,
-  wheat: `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
-    <rect width="100" height="115" fill="#ecc441"/>
-    <g stroke="#c79a1e" stroke-width="3">
-      <line x1="30" y1="104" x2="30" y2="62"/>
-      <line x1="50" y1="107" x2="50" y2="55"/>
-      <line x1="70" y1="104" x2="70" y2="64"/>
-    </g>
-    <ellipse cx="30" cy="57" rx="5" ry="10" fill="#d9a92c"/>
-    <ellipse cx="50" cy="50" rx="5" ry="10" fill="#d9a92c"/>
-    <ellipse cx="70" cy="59" rx="5" ry="10" fill="#d9a92c"/>
-  </svg>`,
-  brick: `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
-    <rect width="100" height="115" fill="#b95c39"/>
-    <g fill="#93482c">
-      <rect x="4" y="18" width="42" height="15"/>
-      <rect x="52" y="18" width="42" height="15"/>
-      <rect x="-20" y="38" width="42" height="15"/>
-      <rect x="28" y="38" width="42" height="15"/>
-      <rect x="76" y="38" width="42" height="15"/>
-      <rect x="4" y="58" width="42" height="15"/>
-      <rect x="52" y="58" width="42" height="15"/>
-      <rect x="-20" y="78" width="42" height="15"/>
-      <rect x="28" y="78" width="42" height="15"/>
-      <rect x="76" y="78" width="42" height="15"/>
-      <rect x="4" y="98" width="42" height="15"/>
-      <rect x="52" y="98" width="42" height="15"/>
-    </g>
-  </svg>`,
-  ore: `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
-    <rect width="100" height="115" fill="#9aa3ad"/>
-    <polygon points="6,84 34,38 62,84" fill="#5d6572"/>
-    <polygon points="34,38 43,54 25,54" fill="#edf1f4"/>
-    <polygon points="44,92 72,48 100,92" fill="#6d7683"/>
-    <polygon points="72,48 80,62 64,62" fill="#edf1f4"/>
-    <polygon points="-10,96 12,58 34,96" fill="#525a66"/>
-    <polygon points="12,58 19,70 5,70" fill="#edf1f4"/>
-  </svg>`,
-  desert: `<svg viewBox="0 0 100 115" preserveAspectRatio="none">
-    <rect width="100" height="115" fill="#ecd39f"/>
-    <circle cx="74" cy="30" r="9" fill="#f7e6b4"/>
-    <path d="M0,72 Q25,60 50,72 T100,72 L100,115 L0,115 Z" fill="#ddbc7e"/>
-    <path d="M0,92 Q25,82 50,92 T100,92 L100,115 L0,115 Z" fill="#cfa76a"/>
-  </svg>`,
+  wood: WOOD_ART,
+  sheep: SHEEP_ART,
+  wheat: WHEAT_ART,
+  brick: BRICK_ART,
+  ore: ORE_ART,
+  desert: DESERT_ART,
 };
 
 type MapMode = 'classic' | 'expansion';
