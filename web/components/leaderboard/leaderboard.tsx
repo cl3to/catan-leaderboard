@@ -235,7 +235,11 @@ export function Leaderboard() {
     `leaderboard-sort-header w-full ${sortBy === column ? 'text-forest-dark' : 'text-muted-foreground hover:text-foreground'}`;
 
   useEffect(() => {
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000';
+    const wsUrl =
+      process.env.NEXT_PUBLIC_WS_URL ||
+      (typeof window !== 'undefined'
+        ? `${window.location.protocol}//${window.location.hostname}:4000`
+        : 'http://localhost:4000');
     const socket = io(wsUrl, {
       transports: ['websocket'],
       withCredentials: true,

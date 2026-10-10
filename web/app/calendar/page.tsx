@@ -36,37 +36,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { toast } from '@/components/ui/use-toast';
+import {
+  formatSaoPauloDateTime,
+  toIsoFromSaoPauloLocalValue,
+  toSaoPauloDateTimeLocalValue,
+} from '@/lib/time';
 import { Calendar as CalendarIcon, Clock, Users, Plus, Flag, Loader2, X, LogOut } from 'lucide-react';
-
-const TIME_ZONE = 'America/Sao_Paulo';
-const SAO_PAULO_OFFSET = '-03:00';
-
-const formatSaoPauloDateTime = (value: string | Date) => {
-  const date = typeof value === 'string' ? new Date(value) : value;
-  return new Intl.DateTimeFormat('pt-BR', {
-    timeZone: TIME_ZONE,
-    dateStyle: 'long',
-    timeStyle: 'short',
-  }).format(date);
-};
-
-const toDatetimeLocalValue = (value: Date) => {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: TIME_ZONE,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-  }).formatToParts(value);
-
-  const getPart = (type: string) => parts.find((part) => part.type === type)?.value ?? '';
-
-  return `${getPart('year')}-${getPart('month')}-${getPart('day')}T${getPart('hour')}:${getPart('minute')}`;
-};
-
-const saoPauloInputToIso = (value: string) => new Date(`${value}:00${SAO_PAULO_OFFSET}`).toISOString();
 
 interface ScheduledMatch {
   id: string;
@@ -130,7 +105,7 @@ export default function CalendarPage() {
         headers: getAuthHeaders(),
         body: JSON.stringify({
           title: values.title || null,
-          scheduledDate: saoPauloInputToIso(values.scheduledDate),
+          scheduledDate: toIsoFromSaoPauloLocalValue(values.scheduledDate),
           minPlayers: values.minPlayers,
           maxPlayers: values.maxPlayers,
         }),
@@ -237,7 +212,7 @@ export default function CalendarPage() {
     resolver: zodResolver(createMatchSchema),
     defaultValues: {
       title: '',
-      scheduledDate: toDatetimeLocalValue(new Date()),
+      scheduledDate: toSaoPauloDateTimeLocalValue(new Date()),
       minPlayers: 3,
       maxPlayers: 4,
     },
@@ -250,9 +225,10 @@ export default function CalendarPage() {
     setShowDetailsDialog(true);
   };
 
-  const handleJoin = () => {
-    if (selectedMatch) {
-      joinMutation.mutate(selectedMatch.id);
+  const handleJoin = (matchId?: string) => {
+    const id = matchId ?? selectedMatch?.id;
+    if (id) {
+      joinMutation.mutate(id);
     }
   };
 
@@ -578,7 +554,7 @@ export default function CalendarPage() {
                             style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
                             onClick={() => {
                               setSelectedMatch(match);
-                              handleJoin();
+                              handleJoin(match.id);
                             }}
                             disabled={joinMutation.isPending}
                           >
@@ -660,7 +636,7 @@ export default function CalendarPage() {
                           variant="outline"
                           className="flex-1 px-4 text-white shadow-[0_0_16px_hsl(var(--social-red)_/_0.18)] hover:text-white"
                           style={{ backgroundColor: 'hsl(var(--social-red-dark))', backgroundImage: 'none' }}
-                          onClick={handleJoin}
+                          onClick={() => handleJoin()}
                           disabled={joinMutation.isPending}
                         >
                           {joinMutation.isPending ? (

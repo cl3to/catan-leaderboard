@@ -156,9 +156,16 @@ export default function AdminPage() {
             u.userId === userId ? { ...u, isActive: !isActive } : u
           )
         );
+      } else {
+        const error = await res.json();
+        throw new Error(error.message || 'Erro ao atualizar usuário');
       }
     } catch (e: any) {
-      toast({ title: 'Erro', description: e.message, variant: 'destructive' });
+      toast({
+        title: 'Erro',
+        description: e instanceof Error ? e.message : 'Erro ao atualizar usuário',
+        variant: 'destructive',
+      });
     } finally {
       setActionLoading(null);
     }

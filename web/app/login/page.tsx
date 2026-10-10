@@ -1,11 +1,18 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { AuthPanel } from '@/components/auth/auth-panel';
 import { Shield, Trophy } from 'lucide-react';
 
 export default function LoginPage() {
   const { status } = useSession();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      window.location.href = '/';
+    }
+  }, [status]);
 
   if (status === 'loading') {
     return (
@@ -23,9 +30,6 @@ export default function LoginPage() {
   }
 
   if (status === 'authenticated') {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
-    }
     return null;
   }
 
