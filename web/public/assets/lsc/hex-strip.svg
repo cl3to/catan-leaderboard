@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 44" role="img" aria-label="Friso de hexágonos com recursos de Catan">
+  <!-- wood / sheep / wheat / brick / ore -->
+  <polygon points="20,6 33.86,14 33.86,30 20,38 6.14,30 6.14,14" fill="#2F6B33" stroke="#1A1712" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="52,6 65.86,14 65.86,30 52,38 38.14,30 38.14,14" fill="#A5C86A" stroke="#1A1712" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="84,6 97.86,14 97.86,30 84,38 70.14,30 70.14,14" fill="#EAC83E" stroke="#1A1712" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="116,6 129.86,14 129.86,30 116,38 102.14,30 102.14,14" fill="#B95C39" stroke="#1A1712" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="148,6 161.86,14 161.86,30 148,38 134.14,30 134.14,14" fill="#9AA3AD" stroke="#1A1712" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>

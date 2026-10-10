@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Assentamento de Catan">
+  <!-- Hard offset shadow, poster style -->
+  <path d="M48,20 L24,44 L24,76 L92,76 L92,54 L72,54 L72,44 Z" fill="#1A1712" opacity="0.25"/>
+
+  <!-- Settlement silhouette -->
+  <path d="M44,16 L20,40 L20,72 L88,72 L88,50 L68,50 L68,40 Z"
+    fill="#C8102E" stroke="#1A1712" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- Windows -->
+  <rect x="37" y="50" width="10" height="13" fill="#F2E8D5" stroke="#1A1712" stroke-width="1.5"/>
+  <rect x="75" y="56" width="8" height="10" fill="#F2E8D5" stroke="#1A1712" stroke-width="1.5"/>
+</svg>

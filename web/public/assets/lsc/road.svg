@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Estrada de Catan">
+  <!-- Hard offset shadow, poster style -->
+  <path d="M18,68 L76,26 L92,34 L34,76 Z" fill="#1A1712" opacity="0.25"/>
+
+  <!-- Road plank -->
+  <path d="M14,64 L72,22 L88,30 L30,72 Z"
+    fill="#C8102E" stroke="#1A1712" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M22,62 L70,27" stroke="#F2E8D5" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+</svg>

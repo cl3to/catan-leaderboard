@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Foice e trigo">
+  <defs>
+    <g id="ear2">
+      <ellipse cx="0" cy="-6" rx="2.6" ry="5.4"/>
+      <ellipse cx="-2.8" cy="-1.5" rx="2.2" ry="4.5" transform="rotate(-28)"/>
+      <ellipse cx="2.8" cy="-1.5" rx="2.2" ry="4.5" transform="rotate(28)"/>
+    </g>
+  </defs>
+
+  <!-- Sickle blade -->
+  <path d="M84,50 A30,30 0 0 0 24,50" fill="none" stroke="#8D96A1" stroke-width="7" stroke-linecap="round"/>
+  <path d="M24,50 L14,64" stroke="#C8102E" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Wheat stem and leaves -->
+  <path d="M50,88 L50,34" fill="none" stroke="#B98F1D" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M50,70 C42,64 38,56 38,48" fill="none" stroke="#B98F1D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50,70 C58,64 62,56 62,48" fill="none" stroke="#B98F1D" stroke-width="3" stroke-linecap="round"/>
+  <g fill="#D9A92C">
+    <use href="#ear2" transform="translate(50,30)"/>
+    <use href="#ear2" transform="translate(46,38) rotate(-14) scale(0.9)"/>
+    <use href="#ear2" transform="translate(54,38) rotate(14) scale(0.9)"/>
+    <use href="#ear2" transform="translate(42,46) rotate(-24) scale(0.85)"/>
+    <use href="#ear2" transform="translate(58,46) rotate(24) scale(0.85)"/>
+  </g>
+
+  <!-- Red ribbon binding -->
+  <rect x="44" y="72" width="12" height="6" rx="2" fill="#C8102E" stroke="#8A0E1F" stroke-width="1"/>
+  <path d="M46,78 L42,88 L48,80 Z" fill="#C8102E"/>
+  <path d="M54,78 L58,88 L52,80 Z" fill="#C8102E"/>
+</svg>

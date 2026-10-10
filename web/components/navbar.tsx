@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { users } from '@/lib/api';
 import { User, LogOut, Calendar, Scroll, Menu, Home, Dices } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const avatarPresets: Record<string, { icon: string }> = {
   wood: { icon: '🪵' }, brick: { icon: '🧱' }, sheep: { icon: '🐑' },
@@ -29,9 +30,13 @@ function NavbarEmblem() {
   return (
     <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-social-red/25 bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.96),rgba(248,231,205,0.95)_55%,rgba(229,198,149,0.96))] shadow-[0_0_18px_hsl(var(--social-red)_/_0.18)] transition-transform duration-200 group-hover:scale-105">
       <div className="absolute inset-1.5 rounded-lg border border-social-red/10" />
-      <span className="relative z-10 select-none text-xl leading-none text-social-red-dark" aria-hidden="true">
-        ☭
-      </span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/assets/lsc/emblem.svg"
+        alt=""
+        aria-hidden="true"
+        className="relative z-10 h-7 w-7 select-none"
+      />
     </div>
   );
 }
@@ -137,7 +142,8 @@ export function Navbar() {
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

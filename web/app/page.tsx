@@ -11,15 +11,13 @@ function LscEmblem() {
     <div className="relative flex h-16 w-16 items-center justify-center rounded-[1.35rem] border border-gold bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.98),rgba(250,241,222,0.97)_55%,rgba(233,214,171,0.97))] shadow-[0_14px_34px_rgba(130,90,30,0.18)]">
       <div className="absolute inset-2 rounded-[1.05rem] border border-gold/40" />
       <div className="absolute inset-0 rounded-[1.35rem] ring-1 ring-inset ring-white/60" />
-      <span
-        className="relative z-10 select-none text-[2.1rem] leading-none text-social-red-dark drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]"
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/assets/lsc/emblem.svg"
+        alt=""
         aria-hidden="true"
-      >
-        ☭
-      </span>
-      <span className="absolute bottom-1.5 left-1/2 z-10 -translate-x-1/2 rounded-full border border-forest/25 bg-white/75 px-1.5 py-0.5 text-[0.42rem] font-bold uppercase tracking-[0.18em] text-forest-dark">
-        LSC
-      </span>
+        className="relative z-10 h-[3.4rem] w-[3.4rem] select-none drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]"
+      />
     </div>
   );
 }
@@ -38,17 +36,17 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-white/70 px-3.5 py-1.5 text-sm shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-surface-elevated/80 px-3.5 py-1.5 text-sm shadow-sm">
               <Crown className="w-4 h-4 text-gold-dark" />
               <span className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">Meta</span>
               <span className="font-display font-bold text-foreground num-tabular">10 PV</span>
             </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-forest/30 bg-white/70 px-3.5 py-1.5 text-sm shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-forest/30 bg-surface-elevated/80 px-3.5 py-1.5 text-sm shadow-sm">
               <Scroll className="w-4 h-4 text-primary" />
               <span className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">Tema</span>
               <span className="font-display font-semibold text-foreground">Recursos</span>
             </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white/70 px-3.5 py-1.5 text-sm shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-elevated/80 px-3.5 py-1.5 text-sm shadow-sm">
               <Castle className="w-4 h-4 text-muted-foreground" />
               <span className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">Doutrina</span>
               <span className="font-display font-semibold text-foreground">Cooperação</span>

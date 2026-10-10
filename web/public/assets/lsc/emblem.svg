@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Emblema LSC: martelo, foice e trigo">
+  <defs>
+    <g id="ear">
+      <ellipse cx="0" cy="-6" rx="2.4" ry="5"/>
+      <ellipse cx="-2.6" cy="-1.5" rx="2" ry="4.2" transform="rotate(-28)"/>
+      <ellipse cx="2.6" cy="-1.5" rx="2" ry="4.2" transform="rotate(28)"/>
+    </g>
+  </defs>
+
+  <!-- Wheat wreath -->
+  <g fill="none" stroke="#B98F1D" stroke-width="3" stroke-linecap="round">
+    <path d="M50,92 C38,88 27,77 25,60"/>
+    <path d="M50,92 C62,88 73,77 75,60"/>
+  </g>
+  <g fill="#D9A92C">
+    <use href="#ear" transform="translate(26,66) rotate(-32) scale(0.95)"/>
+    <use href="#ear" transform="translate(28,76) rotate(-16) scale(0.9)"/>
+    <use href="#ear" transform="translate(33,85) rotate(-5) scale(0.85)"/>
+    <use href="#ear" transform="translate(74,66) rotate(32) scale(0.95)"/>
+    <use href="#ear" transform="translate(72,76) rotate(16) scale(0.9)"/>
+    <use href="#ear" transform="translate(67,85) rotate(5) scale(0.85)"/>
+  </g>
+
+  <!-- Sickle: three-quarter blade with short grip -->
+  <g fill="none" stroke="#C8102E" stroke-width="9" stroke-linecap="round">
+    <path d="M24,44 A26,26 0 1 1 68.4,62.4"/>
+    <path d="M68.4,62.4 L78,72"/>
+  </g>
+
+  <!-- Hammer crossing the sickle -->
+  <g stroke="#C8102E" stroke-linecap="round">
+    <path d="M26,74 L58,42" stroke-width="9"/>
+    <g transform="translate(60,40) rotate(45)">
+      <rect x="-17" y="-7.5" width="34" height="15" rx="2.5" fill="#C8102E" stroke="none"/>
+    </g>
+  </g>
+
+  <!-- Banner with LSC -->
+  <g stroke-linejoin="round">
+    <polygon points="32,76 21,76 24.5,81.5 21,87 32,87" fill="#6E0B18" stroke="#1A1712" stroke-width="1.2"/>
+    <polygon points="68,76 79,76 75.5,81.5 79,87 68,87" fill="#6E0B18" stroke="#1A1712" stroke-width="1.2"/>
+    <rect x="30" y="74" width="40" height="15" rx="2" fill="#8A0E1F" stroke="#1A1712" stroke-width="1.5"/>
+    <text x="50" y="85" text-anchor="middle" font-family="'Space Grotesk','Arial',sans-serif" font-weight="700" font-size="10.5" letter-spacing="2" fill="#F2E8D5">LSC</text>
+  </g>
+</svg>

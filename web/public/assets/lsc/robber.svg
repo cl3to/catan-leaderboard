@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Ladrão de Catan">
+  <!-- Ground shadow -->
+  <ellipse cx="50" cy="89" rx="22" ry="4.5" fill="#1A1712" opacity="0.3"/>
+
+  <!-- Cloaked figure -->
+  <path d="M50,12 C38,12 32,22 32,32 C32,38 28,44 26,52 C22,66 26,82 34,88 L66,88 C74,82 78,66 74,52 C72,44 68,38 68,32 C68,22 62,12 50,12 Z"
+    fill="#33302B" stroke="#1A1712" stroke-width="2.5" stroke-linejoin="round"/>
+
+  <!-- Hood opening -->
+  <ellipse cx="50" cy="30" rx="12" ry="10" fill="#1A1712"/>
+
+  <!-- Glowing red eyes -->
+  <circle cx="44" cy="30" r="3.2" fill="#C8102E"/>
+  <circle cx="56" cy="30" r="3.2" fill="#C8102E"/>
+</svg>
